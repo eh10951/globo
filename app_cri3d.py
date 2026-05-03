@@ -14,8 +14,33 @@ st.set_page_config(
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-    .main { background: #05070a; color: #f8fafc; font-family: 'Outfit', sans-serif; }
-    .stApp { background: #05070a; }
+    .main { 
+        background: radial-gradient(circle at center, #0a1422 0%, #05070a 100%); 
+        color: #f8fafc; 
+        font-family: 'Outfit', sans-serif; 
+    }
+    .stApp { 
+        background: radial-gradient(circle at 20% 20%, rgba(232, 181, 71, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+                    #05070a;
+    }
+    /* Efecto de estrellas */
+    .stApp::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: 
+            radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
+            radial-gradient(1.5px 1.5px at 40px 70px, #fff, rgba(0,0,0,0)),
+            radial-gradient(1px 1px at 50px 160px, #fff, rgba(0,0,0,0)),
+            radial-gradient(1.5px 1.5px at 90px 40px, #fff, rgba(0,0,0,0)),
+            radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
+            radial-gradient(1.5px 1.5px at 160px 120px, #fff, rgba(0,0,0,0));
+        background-repeat: repeat;
+        background-size: 200px 200px;
+        opacity: 0.15;
+        pointer-events: none;
+    }
     .sidebar-section {
         background: rgba(26, 31, 46, 0.4);
         border: 1px solid rgba(232, 181, 71, 0.15);
@@ -157,6 +182,20 @@ with col_map:
     fig.update_layout(
         height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
+        annotations=[
+            # SOL (Sun)
+            dict(
+                x=0.08, y=0.92, xref="paper", yref="paper",
+                text="<span style='font-size:40px; text-shadow: 0 0 20px #E8B547, 0 0 40px #E8B547;'>☀️</span>",
+                showarrow=False,
+            ),
+            # LUNA (Moon)
+            dict(
+                x=0.88, y=0.15, xref="paper", yref="paper",
+                text="<span style='font-size:30px; text-shadow: 0 0 15px #cbd5e1, 0 0 30px #fff;'>🌙</span>",
+                showarrow=False,
+            )
+        ],
         geo = dict(
             projection_type = "orthographic",
             showcoastlines = True, coastlinecolor = "#3498DB",
@@ -164,7 +203,7 @@ with col_map:
             showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
             showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
             bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.85, 
+            projection_scale = 0.82, 
             projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
         )
     )
