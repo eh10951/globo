@@ -155,7 +155,7 @@ with col_map:
     ))
 
     fig.update_layout(
-        height = 550, margin = {"r":0,"t":0,"l":0,"b":0},
+        height = 550, margin = {"r":0,"t":35,"l":0,"b":0}, # t:35 para bajar el globo y centrarlo visualmente
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
         geo = dict(
             projection_type = "orthographic",
@@ -164,7 +164,7 @@ with col_map:
             showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
             showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
             bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.85, # Más alejado como se solicitó
+            projection_scale = 0.85, 
             projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
         )
     )
