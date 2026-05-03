@@ -53,6 +53,14 @@ st.markdown("""
     .st-emotion-cache-zq5wmm {display: none !important;}
     button[title="View fullscreen"] {display: none !important;}
     .block-container { padding: 1rem 2rem !important; }
+    /* Eliminación total de marca de agua de Streamlit */
+    div[data-testid="stFooter"] {display: none !important;}
+    div[data-testid="stStatusWidget"] {display: none !important;}
+    .viewerBadge_container__1QSob {display: none !important;}
+    .stAppToolbar {display: none !important;}
+    .st-emotion-cache-1vt4y6f {display: none !important;}
+    .st-emotion-cache-1v469f6 {display: none !important;}
+    .st-emotion-cache-v698uo {display: none !important;}
 </style>
 """, unsafe_allow_html=True)
 
