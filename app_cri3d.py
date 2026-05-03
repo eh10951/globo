@@ -182,20 +182,6 @@ with col_map:
     fig.update_layout(
         height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
-        annotations=[
-            # SOL PROFESIONAL (Círculo radiante minimalista)
-            dict(
-                x=0.05, y=0.95, xref="paper", yref="paper",
-                text="<div style='width:35px; height:35px; background:white; border-radius:50%; box-shadow: 0 0 25px #E8B547, 0 0 60px #E8B547;'></div>",
-                showarrow=False,
-            ),
-            # LUNA PROFESIONAL (Esfera plateada elegante)
-            dict(
-                x=0.92, y=0.08, xref="paper", yref="paper",
-                text="<div style='width:20px; height:20px; background:#cbd5e1; border-radius:50%; box-shadow: 0 0 15px rgba(255,255,255,0.3); border-left: 4px solid white;'></div>",
-                showarrow=False,
-            )
-        ],
         geo = dict(
             projection_type = "orthographic",
             showcoastlines = True, coastlinecolor = "#3498DB",
@@ -208,7 +194,38 @@ with col_map:
         )
     )
 
-    selection = st.plotly_chart(fig, use_container_width=True, on_select="rerun", config={'displayModeBar': False})
+    # Contenedor para el mapa con Sol y Luna superpuestos mediante CSS
+    map_container = st.container()
+    with map_container:
+        st.markdown("""
+            <div style="position: relative;">
+                <!-- SOL PROFESIONAL -->
+                <div style="
+                    position: absolute; 
+                    top: 50px; left: 60px; 
+                    width: 35px; height: 35px; 
+                    background: white; 
+                    border-radius: 50%; 
+                    box-shadow: 0 0 25px #E8B547, 0 0 60px #E8B547;
+                    z-index: 10;
+                    pointer-events: none;
+                "></div>
+                <!-- LUNA PROFESIONAL -->
+                <div style="
+                    position: absolute; 
+                    bottom: 80px; right: 100px; 
+                    width: 20px; height: 20px; 
+                    background: #cbd5e1; 
+                    border-radius: 50%; 
+                    box-shadow: 0 0 15px rgba(255,255,255,0.3); 
+                    border-left: 4px solid white;
+                    z-index: 10;
+                    pointer-events: none;
+                "></div>
+            </div>
+        """, unsafe_allow_html=True)
+        
+        selection = st.plotly_chart(fig, use_container_width=True, on_select="rerun", config={'displayModeBar': False})
 
     if selection and "selection" in selection and selection["selection"]["points"]:
         clicked_name = selection["selection"]["points"][0]["text"]
