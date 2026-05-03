@@ -37,6 +37,9 @@ st.markdown("""
         background-attachment: fixed !important;
         color: #f8fafc; 
         font-family: 'Outfit', sans-serif; 
+        overflow: hidden !important;
+        touch-action: none !important;
+        overscroll-behavior: none !important;
     }
     .sidebar-section {
         background: rgba(26, 31, 46, 0.4);
@@ -202,7 +205,7 @@ with col_map:
     map_container = st.container()
     with map_container:
         st.markdown("""
-            <div style="position: relative; overflow: visible;">
+            <div style="position: relative; touch-action: none;">
                 <!-- SOL PROFESIONAL (Resplandor Intenso) -->
                 <div style="
                     position: absolute; 
