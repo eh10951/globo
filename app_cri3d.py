@@ -93,8 +93,8 @@ df = get_data()
 if 'selected_state' not in st.session_state: st.session_state.selected_state = "Sonora"
 if 'selected_country' not in st.session_state: st.session_state.selected_country = "México"
 
-# UI con centrado vertical absoluto y espacio expandido para el mapa
-col_map, col_side = st.columns([4, 1], gap="large", vertical_alignment="center")
+# UI con centrado vertical absoluto y balance de márgenes
+col_map, col_side, col_spacer = st.columns([3.5, 1.5, 0.3], gap="large", vertical_alignment="center")
 
 with col_side:
     st.markdown("<div class='title-panel'><p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
