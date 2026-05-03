@@ -52,7 +52,11 @@ st.markdown("""
     .st-emotion-cache-1kyy7id {display: none !important;}
     .st-emotion-cache-zq5wmm {display: none !important;}
     button[title="View fullscreen"] {display: none !important;}
-    .block-container { padding: 1rem 2rem 0rem 2rem !important; }
+    .block-container { padding: 0.5rem 2rem !important; }
+    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem !important;}
+    /* Ocultar scrollbar para vista limpia */
+    .stApp { overflow: hidden !important; }
+    ::-webkit-scrollbar { display: none; }
     /* Eliminación total de marca de agua de Streamlit */
     div[data-testid="stFooter"] {display: none !important;}
     div[data-testid="stStatusWidget"] {display: none !important;}
@@ -89,8 +93,8 @@ df = get_data()
 if 'selected_state' not in st.session_state: st.session_state.selected_state = "Sonora"
 if 'selected_country' not in st.session_state: st.session_state.selected_country = "México"
 
-# UI
-col_map, col_side = st.columns([3, 1.2])
+# UI con centrado vertical absoluto
+col_map, col_side = st.columns([3, 1.2], gap="medium", vertical_alignment="center")
 
 with col_side:
     st.markdown("<div class='title-panel'><p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
@@ -151,7 +155,7 @@ with col_map:
     ))
 
     fig.update_layout(
-        height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
+        height = 550, margin = {"r":0,"t":0,"l":0,"b":0},
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
         geo = dict(
             projection_type = "orthographic",
@@ -160,7 +164,7 @@ with col_map:
             showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
             showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
             bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 1.0,
+            projection_scale = 0.85, # Más alejado como se solicitó
             projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
         )
     )
