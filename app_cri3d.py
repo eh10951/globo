@@ -47,16 +47,12 @@ st.markdown("""
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden; display: none !important;}
     header {visibility: hidden; display: none !important;}
-    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem !important;}
+    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
     .stAppDeployButton {display: none !important;}
     .st-emotion-cache-1kyy7id {display: none !important;}
     .st-emotion-cache-zq5wmm {display: none !important;}
     button[title="View fullscreen"] {display: none !important;}
-    .block-container { padding: 0.5rem 2rem !important; }
-    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem !important;}
-    /* Ocultar scrollbar para vista limpia */
-    .stApp { overflow: hidden !important; }
-    ::-webkit-scrollbar { display: none; }
+    .block-container { padding: 1rem 2rem 0rem 2rem !important; }
     /* Eliminación total de marca de agua de Streamlit */
     div[data-testid="stFooter"] {display: none !important;}
     div[data-testid="stStatusWidget"] {display: none !important;}
@@ -93,28 +89,14 @@ df = get_data()
 if 'selected_state' not in st.session_state: st.session_state.selected_state = "Sonora"
 if 'selected_country' not in st.session_state: st.session_state.selected_country = "México"
 
-# Ajuste de columnas para balance profesional (Proporción 2:1)
-col_map, col_side = st.columns([2, 1], gap="large", vertical_alignment="center")
+# UI
+col_map, col_side = st.columns([3, 1.2])
 
 with col_side:
-    # Contenedor principal con efecto Glassmorphism
-    st.markdown(f"""
-        <div style="
-            background: rgba(10, 14, 20, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 30px;
-            border: 1px solid rgba(232, 181, 71, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        ">
-            <div style='text-align: center; margin-bottom: 25px;'>
-                <p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 4px; font-weight: 800; text-transform: uppercase;'>VISIÓN INTELIGENTE</p>
-                <div style='height: 2px; width: 40px; background: #E8B547; margin: 10px auto;'></div>
-            </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<div class='title-panel'><p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
     
     countries = df['country'].unique().tolist()
-    country_choice = st.selectbox("PAÍS DE ORIGEN", countries, index=countries.index(st.session_state.selected_country))
+    country_choice = st.selectbox("País", countries, index=countries.index(st.session_state.selected_country))
     
     if country_choice != st.session_state.selected_country:
         st.session_state.selected_country = country_choice
@@ -122,46 +104,36 @@ with col_side:
         st.rerun()
 
     states = df[df['country'] == st.session_state.selected_country]['name'].tolist()
-    state_choice = st.selectbox("ESTADO / REGIÓN", states, index=states.index(st.session_state.selected_state))
+    state_choice = st.selectbox("Estado", states, index=states.index(st.session_state.selected_state))
     st.session_state.selected_state = state_choice
 
     data = df[df['name'] == st.session_state.selected_state].iloc[0]
     risk = data['risk']
     color = "#ff4b4b" if risk > 85 else ("#E8B547" if risk > 50 else "#4caf50")
-    status = "NIVEL CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 else "ÓPTIMO")
+    status = "CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 else "ÓPTIMO")
 
-    # Visualización de Riesgo Premium
     st.markdown(f"""
-        <div style="margin: 25px 0;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
-                <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600;">RIESGO ITH</span>
-                <span style="font-size: 1.8rem; font-weight: 800; color: #fff;">{risk:.1f}%</span>
-            </div>
-            <div style="height: 6px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
-                <div style="height: 100%; width: {risk}%; background: {color}; box-shadow: 0 0 10px {color}88;"></div>
-            </div>
-            <p style="font-size: 0.7rem; color: {color}; font-weight: 700; margin-top: 8px; letter-spacing: 1px;">{status}</p>
+        <div class="sidebar-section" style="border-top: 4px solid {color};">
+            <p style="font-size:0.7rem; color:#94a3b8; margin:0;">ESTADO ACTUAL: <b style="color:{color}">{status}</b></p>
+            <p style="font-size:1.1rem; font-weight:700; margin:5px 0;">{data['name']}</p>
+            <p style="font-size:2.8rem; font-weight:700; color:#fff; margin:0;">{risk:.1f}%</p>
         </div>
-        
-        <div style="
-            background: rgba(232, 181, 71, 0.05);
-            border-left: 3px solid {color};
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 20px;
-        ">
-            <p style="font-size: 0.65rem; color: #E8B547; font-weight: 800; margin-bottom: 5px; text-transform: uppercase;">Protocolo IA</p>
-            <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; margin: 0;">
-                { "Activar enfriamiento forzado y aspersores de inmediato." if risk > 85 else 
-                  ("Preparar zonas de sombra y aumentar flujo de hidratación." if risk > 65 else 
-                  "Condiciones estables. Monitoreo rutinario activo.") }
-            </p>
+    """, unsafe_allow_html=True)
+
+    if risk > 85: protocol = "🚨 **ALERTA CRÍTICA**: Estrés térmico extremo. Activar aspersores cada 15 min, agua a <20°C."
+    elif risk > 65: protocol = "⚠️ **AVISO PREVENTIVO**: ITH elevado. Garantizar sombra total para el hato."
+    elif risk > 40: protocol = "⚖️ **MODERADO**: Condiciones estables. Monitorear hidratación."
+    else: protocol = "✅ **ÓPTIMO**: Condiciones ideales. Autorizado pastoreo intensivo."
+
+    st.markdown(f"""
+        <div class="ai-protocol-card">
+            <div class="protocol-header">Sugerencias IA</div>
+            <div class="protocol-body">{protocol}</div>
         </div>
-    </div>
     """, unsafe_allow_html=True)
 
 with col_map:
-    # GLOBO AZUL REAL (Más grande y centrado para profesionalismo)
+    # GLOBO AZUL REAL (No negro)
     fig = go.Figure()
     
     fig.add_trace(go.Scattergeo(
@@ -179,16 +151,16 @@ with col_map:
     ))
 
     fig.update_layout(
-        height = 500, margin = {"r":0,"t":0,"l":0,"b":0},
+        height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
         geo = dict(
             projection_type = "orthographic",
             showcoastlines = True, coastlinecolor = "#3498DB",
-            showland = True, landcolor = "#1F2F45", 
-            showocean = True, oceancolor = "#121926", 
+            showland = True, landcolor = "#1F2F45", # Azul Grisáceo elegante
+            showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
             showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
             bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.9, # Ajuste de distancia pedido por el usuario
+            projection_scale = 1.0,
             projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
         )
     )
