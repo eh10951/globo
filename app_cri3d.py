@@ -199,26 +199,25 @@ with col_map:
     with map_container:
         st.markdown("""
             <div style="position: relative;">
-                <!-- SOL PROFESIONAL -->
+                <!-- SOL PROFESIONAL (Resplandor Intenso) -->
                 <div style="
                     position: absolute; 
-                    top: 50px; left: 60px; 
-                    width: 35px; height: 35px; 
-                    background: white; 
+                    top: 10%; left: 8%; 
+                    width: 30px; height: 30px; 
+                    background: #fff; 
                     border-radius: 50%; 
-                    box-shadow: 0 0 25px #E8B547, 0 0 60px #E8B547;
+                    box-shadow: 0 0 15px #fff, 0 0 40px #E8B547, 0 0 70px #E8B547;
                     z-index: 10;
                     pointer-events: none;
                 "></div>
-                <!-- LUNA PROFESIONAL -->
+                <!-- LUNA PROFESIONAL (Perlada y Baja) -->
                 <div style="
                     position: absolute; 
-                    bottom: 15%; right: 25%; 
-                    width: 25px; height: 25px; 
-                    background: #cbd5e1; 
+                    bottom: 5%; right: 15%; 
+                    width: 22px; height: 22px; 
+                    background: #E2E8F0; 
                     border-radius: 50%; 
-                    box-shadow: inset -5px -3px 6px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); 
-                    border: 1px solid rgba(255,255,255,0.1);
+                    box-shadow: 0 0 8px #fff, 0 0 25px rgba(148, 163, 184, 0.4); 
                     z-index: 10;
                     pointer-events: none;
                 "></div>
