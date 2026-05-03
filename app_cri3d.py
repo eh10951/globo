@@ -180,16 +180,16 @@ with col_map:
     ))
 
     fig.update_layout(
-        height = 550, margin = {"r":0,"t":0,"l":0,"b":0},
+        height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
         geo = dict(
             projection_type = "orthographic",
             showcoastlines = True, coastlinecolor = "#3498DB",
-            showland = True, landcolor = "#1F2F45", 
-            showocean = True, oceancolor = "#121926", 
+            showland = True, landcolor = "#1F2F45", # Azul Grisáceo elegante
+            showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
             showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
             bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.88, 
+            projection_scale = 0.92, 
             projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
         )
     )
@@ -198,7 +198,7 @@ with col_map:
     map_container = st.container()
     with map_container:
         st.markdown("""
-            <div style="position: relative; height: 550px; overflow: hidden;">
+            <div style="position: relative; overflow: visible;">
                 <!-- SOL PROFESIONAL (Resplandor Intenso) -->
                 <div style="
                     position: absolute; 
@@ -213,7 +213,7 @@ with col_map:
                 <!-- LUNA PROFESIONAL (Ligeramente más baja que el sol) -->
                 <div style="
                     position: absolute; 
-                    top: 25%; right: 10%; 
+                    top: 22%; right: 10%; 
                     width: 22px; height: 22px; 
                     background: #E2E8F0; 
                     border-radius: 50%; 
