@@ -189,7 +189,7 @@ with col_map:
             showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
             showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
             bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.82, 
+            projection_scale = 0.92, 
             projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
         )
     )
@@ -198,11 +198,11 @@ with col_map:
     map_container = st.container()
     with map_container:
         st.markdown("""
-            <div style="position: relative; height: 700px;">
+            <div style="position: relative; overflow: visible;">
                 <!-- SOL PROFESIONAL (Resplandor Intenso) -->
                 <div style="
                     position: absolute; 
-                    top: 12%; left: 8%; 
+                    top: 10%; left: 8%; 
                     width: 30px; height: 30px; 
                     background: #fff; 
                     border-radius: 50%; 
@@ -210,10 +210,10 @@ with col_map:
                     z-index: 10;
                     pointer-events: none;
                 "></div>
-                <!-- LUNA PROFESIONAL (Perlada y Baja) -->
+                <!-- LUNA PROFESIONAL (Ligeramente más baja que el sol) -->
                 <div style="
                     position: absolute; 
-                    top: 80%; right: 12%; 
+                    top: 22%; right: 10%; 
                     width: 22px; height: 22px; 
                     background: #E2E8F0; 
                     border-radius: 50%; 
