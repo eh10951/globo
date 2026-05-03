@@ -213,12 +213,12 @@ with col_map:
                 <!-- LUNA PROFESIONAL -->
                 <div style="
                     position: absolute; 
-                    bottom: 80px; right: 100px; 
-                    width: 20px; height: 20px; 
+                    bottom: 15%; right: 25%; 
+                    width: 25px; height: 25px; 
                     background: #cbd5e1; 
                     border-radius: 50%; 
-                    box-shadow: 0 0 15px rgba(255,255,255,0.3); 
-                    border-left: 4px solid white;
+                    box-shadow: inset -5px -3px 6px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.2); 
+                    border: 1px solid rgba(255,255,255,0.1);
                     z-index: 10;
                     pointer-events: none;
                 "></div>
