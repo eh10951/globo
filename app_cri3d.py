@@ -35,8 +35,6 @@ st.markdown("""
             radial-gradient(circle at 70% 70%, rgba(52, 152, 219, 0.1) 0%, transparent 60%),
             radial-gradient(ellipse at 50% 50%, rgba(20, 30, 48, 0.6) 0%, #05070a 100%) !important;
         background-attachment: fixed !important;
-        overflow: hidden !important;
-        height: 100vh !important;
         color: #f8fafc; 
         font-family: 'Outfit', sans-serif; 
     }
@@ -179,7 +177,7 @@ with col_map:
     ))
 
     fig.update_layout(
-        height = 550, margin = {"r":0,"t":0,"l":0,"b":0},
+        height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
         geo = dict(
             projection_type = "orthographic",
@@ -188,7 +186,7 @@ with col_map:
             showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
             showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
             bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.9, 
+            projection_scale = 0.92, 
             projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
         )
     )
@@ -197,7 +195,7 @@ with col_map:
     map_container = st.container()
     with map_container:
         st.markdown("""
-            <div style="position: relative; height: 550px; overflow: hidden;">
+            <div style="position: relative; overflow: visible;">
                 <!-- SOL PROFESIONAL (Resplandor Intenso) -->
                 <div style="
                     position: absolute; 
