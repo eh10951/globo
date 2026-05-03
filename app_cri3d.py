@@ -93,8 +93,8 @@ df = get_data()
 if 'selected_state' not in st.session_state: st.session_state.selected_state = "Sonora"
 if 'selected_country' not in st.session_state: st.session_state.selected_country = "México"
 
-# UI con centrado vertical absoluto
-col_map, col_side = st.columns([3, 1.2], gap="medium", vertical_alignment="center")
+# UI con centrado vertical absoluto y espacio expandido para el mapa
+col_map, col_side = st.columns([4, 1], gap="large", vertical_alignment="center")
 
 with col_side:
     st.markdown("<div class='title-panel'><p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
@@ -155,7 +155,7 @@ with col_map:
     ))
 
     fig.update_layout(
-        height = 550, margin = {"r":0,"t":35,"l":0,"b":0}, # t:35 para bajar el globo y centrarlo visualmente
+        height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
         geo = dict(
             projection_type = "orthographic",
