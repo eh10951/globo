@@ -85,11 +85,18 @@ st.markdown("""
     .viewerBadge_container__1QSob {display: none !important;}
     .stAppToolbar {display: none !important;}
     .st-emotion-cache-1vt4y6f {display: none !important;}
-    .st-emotion-cache-1v469f6 {display: none !important;}
-    .st-emotion-cache-v698uo {display: none !important;}
-    .st-emotion-cache-6q9sum {display: none !important;}
-    .st-emotion-cache-1vt4y6f {display: none !important;}
-    footer {display: none !important;}
+    
+    /* Responsividad para Móviles */
+    @media (max-width: 600px) {
+        .block-container { padding: 0.5rem 0.5rem !important; }
+        .sidebar-section { padding: 10px !important; margin-bottom: 5px !important; }
+        .sidebar-section p { font-size: 0.6rem !important; }
+        .sidebar-section h3 { font-size: 1rem !important; }
+        .sidebar-section span { font-size: 2rem !important; }
+        .title-panel p { font-size: 0.7rem !important; letter-spacing: 1px !important; }
+        .ai-protocol-card { padding: 10px !important; }
+        .protocol-body { font-size: 0.7rem !important; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
