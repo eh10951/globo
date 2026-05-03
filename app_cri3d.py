@@ -20,25 +20,35 @@ st.markdown("""
         font-family: 'Outfit', sans-serif; 
     }
     .stApp { 
-        background: radial-gradient(circle at 20% 20%, rgba(232, 181, 71, 0.05) 0%, transparent 40%),
-                    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+        background: radial-gradient(circle at 30% 30%, rgba(52, 152, 219, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 70%, rgba(52, 152, 219, 0.05) 0%, transparent 60%),
                     #05070a;
     }
-    /* Efecto de estrellas */
+    /* Efecto de nebulosa y estrellas azules */
     .stApp::before {
         content: "";
         position: absolute;
         top: 0; left: 0; width: 100%; height: 100%;
         background-image: 
-            radial-gradient(1px 1px at 20px 30px, #fff, rgba(0,0,0,0)),
-            radial-gradient(1.5px 1.5px at 40px 70px, #fff, rgba(0,0,0,0)),
-            radial-gradient(1px 1px at 50px 160px, #fff, rgba(0,0,0,0)),
-            radial-gradient(1.5px 1.5px at 90px 40px, #fff, rgba(0,0,0,0)),
-            radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
-            radial-gradient(1.5px 1.5px at 160px 120px, #fff, rgba(0,0,0,0));
+            radial-gradient(1px 1px at 10% 20%, #3498DB, rgba(0,0,0,0)),
+            radial-gradient(1.5px 1.5px at 30% 50%, #fff, rgba(0,0,0,0)),
+            radial-gradient(1px 1px at 50% 80%, #3498DB, rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 80% 30%, #fff, rgba(0,0,0,0)),
+            radial-gradient(1.2px 1.2px at 90% 60%, #3498DB, rgba(0,0,0,0)),
+            radial-gradient(1px 1px at 20% 90%, #fff, rgba(0,0,0,0));
         background-repeat: repeat;
-        background-size: 200px 200px;
-        opacity: 0.15;
+        background-size: 350px 350px;
+        opacity: 0.2;
+        pointer-events: none;
+    }
+    /* Humo azul espacial (Nebulosa) */
+    .stApp::after {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(ellipse at 50% 50%, rgba(20, 30, 48, 0.5) 0%, transparent 70%);
+        filter: blur(60px);
+        z-index: -1;
         pointer-events: none;
     }
     .sidebar-section {
