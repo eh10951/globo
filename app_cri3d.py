@@ -198,11 +198,11 @@ with col_map:
     map_container = st.container()
     with map_container:
         st.markdown("""
-            <div style="position: relative;">
+            <div style="position: relative; height: 700px;">
                 <!-- SOL PROFESIONAL (Resplandor Intenso) -->
                 <div style="
                     position: absolute; 
-                    top: 10%; left: 8%; 
+                    top: 12%; left: 8%; 
                     width: 30px; height: 30px; 
                     background: #fff; 
                     border-radius: 50%; 
@@ -213,7 +213,7 @@ with col_map:
                 <!-- LUNA PROFESIONAL (Perlada y Baja) -->
                 <div style="
                     position: absolute; 
-                    bottom: 5%; right: 15%; 
+                    top: 80%; right: 12%; 
                     width: 22px; height: 22px; 
                     background: #E2E8F0; 
                     border-radius: 50%; 
