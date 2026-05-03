@@ -93,16 +93,28 @@ df = get_data()
 if 'selected_state' not in st.session_state: st.session_state.selected_state = "Sonora"
 if 'selected_country' not in st.session_state: st.session_state.selected_country = "México"
 
-# Ajuste de columnas con alineación vertical centrada absoluta
-col_map, col_side = st.columns([3.2, 1], gap="large", vertical_alignment="center")
+# Ajuste de columnas para balance profesional (Proporción 2:1)
+col_map, col_side = st.columns([2, 1], gap="large", vertical_alignment="center")
 
 with col_side:
-    # Espaciador para bajar un poco el panel y centrarlo mejor
-    st.markdown("<div style='height: 20px;'></div>", unsafe_allow_html=True)
-    st.markdown("<div class='title-panel' style='margin-bottom:10px;'><p style='margin:0; font-size:0.75rem; color:#E8B547; letter-spacing: 2px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
+    # Contenedor principal con efecto Glassmorphism
+    st.markdown(f"""
+        <div style="
+            background: rgba(10, 14, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
+            border: 1px solid rgba(232, 181, 71, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        ">
+            <div style='text-align: center; margin-bottom: 25px;'>
+                <p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 4px; font-weight: 800; text-transform: uppercase;'>VISIÓN INTELIGENTE</p>
+                <div style='height: 2px; width: 40px; background: #E8B547; margin: 10px auto;'></div>
+            </div>
+    """, unsafe_allow_html=True)
     
     countries = df['country'].unique().tolist()
-    country_choice = st.selectbox("País", countries, index=countries.index(st.session_state.selected_country), label_visibility="collapsed")
+    country_choice = st.selectbox("PAÍS DE ORIGEN", countries, index=countries.index(st.session_state.selected_country))
     
     if country_choice != st.session_state.selected_country:
         st.session_state.selected_country = country_choice
@@ -110,35 +122,46 @@ with col_side:
         st.rerun()
 
     states = df[df['country'] == st.session_state.selected_country]['name'].tolist()
-    state_choice = st.selectbox("Estado", states, index=states.index(st.session_state.selected_state), label_visibility="collapsed")
+    state_choice = st.selectbox("ESTADO / REGIÓN", states, index=states.index(st.session_state.selected_state))
     st.session_state.selected_state = state_choice
 
     data = df[df['name'] == st.session_state.selected_state].iloc[0]
     risk = data['risk']
     color = "#ff4b4b" if risk > 85 else ("#E8B547" if risk > 50 else "#4caf50")
-    status = "CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 else "ÓPTIMO")
+    status = "NIVEL CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 else "ÓPTIMO")
 
+    # Visualización de Riesgo Premium
     st.markdown(f"""
-        <div class="sidebar-section" style="border-top: 3px solid {color}; padding: 8px; margin-bottom: 5px;">
-            <p style="font-size:0.55rem; color:#94a3b8; margin:0;">ESTADO: <b style="color:{color}">{status}</b></p>
-            <p style="font-size:0.9rem; font-weight:700; margin:1px 0;">{data['name']}</p>
-            <p style="font-size:1.8rem; font-weight:700; color:#fff; margin:0;">{risk:.1f}%</p>
+        <div style="margin: 25px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 8px;">
+                <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600;">RIESGO ITH</span>
+                <span style="font-size: 1.8rem; font-weight: 800; color: #fff;">{risk:.1f}%</span>
+            </div>
+            <div style="height: 6px; width: 100%; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden;">
+                <div style="height: 100%; width: {risk}%; background: {color}; box-shadow: 0 0 10px {color}88;"></div>
+            </div>
+            <p style="font-size: 0.7rem; color: {color}; font-weight: 700; margin-top: 8px; letter-spacing: 1px;">{status}</p>
         </div>
-    """, unsafe_allow_html=True)
-
-    if risk > 85: protocol = "🚨 **ALERTA**: Riesgo crítico."
-    elif risk > 65: protocol = "⚠️ **AVISO**: ITH elevado."
-    else: protocol = "✅ **ÓPTIMO**: Estable."
-
-    st.markdown(f"""
-        <div class="ai-protocol-card" style="padding: 8px; margin-top: 2px;">
-            <div class="protocol-header" style="font-size: 0.6rem; margin-bottom: 2px;">Sugerencias IA</div>
-            <div class="protocol-body" style="font-size: 0.75rem;">{protocol}</div>
+        
+        <div style="
+            background: rgba(232, 181, 71, 0.05);
+            border-left: 3px solid {color};
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+        ">
+            <p style="font-size: 0.65rem; color: #E8B547; font-weight: 800; margin-bottom: 5px; text-transform: uppercase;">Protocolo IA</p>
+            <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; margin: 0;">
+                { "Activar enfriamiento forzado y aspersores de inmediato." if risk > 85 else 
+                  ("Preparar zonas de sombra y aumentar flujo de hidratación." if risk > 65 else 
+                  "Condiciones estables. Monitoreo rutinario activo.") }
+            </p>
         </div>
+    </div>
     """, unsafe_allow_html=True)
 
 with col_map:
-    # GLOBO AZUL REAL (Altura reducida para evitar scroll)
+    # GLOBO AZUL REAL (Más grande y centrado para profesionalismo)
     fig = go.Figure()
     
     fig.add_trace(go.Scattergeo(
