@@ -44,7 +44,14 @@ st.markdown("""
         margin-bottom: 8px;
     }
     .protocol-body { font-size: 0.8rem; line-height: 1.4; color: #cbd5e1; }
-    #MainMenu, footer, header { visibility: hidden; }
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden; display: none !important;}
+    header {visibility: hidden; display: none !important;}
+    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
+    .stAppDeployButton {display: none !important;}
+    .st-emotion-cache-1kyy7id {display: none !important;}
+    .st-emotion-cache-zq5wmm {display: none !important;}
+    button[title="View fullscreen"] {display: none !important;}
     .block-container { padding: 1rem 2rem !important; }
 </style>
 """, unsafe_allow_html=True)
