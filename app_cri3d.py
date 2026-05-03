@@ -183,16 +183,16 @@ with col_map:
         height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
         paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
         annotations=[
-            # SOL (Sun)
+            # SOL PROFESIONAL (Círculo radiante minimalista)
             dict(
-                x=0.08, y=0.92, xref="paper", yref="paper",
-                text="<span style='font-size:40px; text-shadow: 0 0 20px #E8B547, 0 0 40px #E8B547;'>☀️</span>",
+                x=0.05, y=0.95, xref="paper", yref="paper",
+                text="<div style='width:35px; height:35px; background:white; border-radius:50%; box-shadow: 0 0 25px #E8B547, 0 0 60px #E8B547;'></div>",
                 showarrow=False,
             ),
-            # LUNA (Moon)
+            # LUNA PROFESIONAL (Esfera plateada elegante)
             dict(
-                x=0.88, y=0.15, xref="paper", yref="paper",
-                text="<span style='font-size:30px; text-shadow: 0 0 15px #cbd5e1, 0 0 30px #fff;'>🌙</span>",
+                x=0.92, y=0.08, xref="paper", yref="paper",
+                text="<div style='width:20px; height:20px; background:#cbd5e1; border-radius:50%; box-shadow: 0 0 15px rgba(255,255,255,0.3); border-left: 4px solid white;'></div>",
                 showarrow=False,
             )
         ],
