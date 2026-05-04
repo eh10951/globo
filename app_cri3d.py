@@ -107,16 +107,16 @@ st.markdown("""
 @st.cache_data
 def get_data():
     base = [
-        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "risk": 94.2},
-        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "risk": 88.5},
-        {"country": "México", "name": "Coahuila", "lat": 27.3, "lon": -101.7, "risk": 86.1},
-        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "risk": 82.3},
-        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "risk": 55.2},
-        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "risk": 41.5},
-        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "risk": 35.1},
-        {"country": "USA", "name": "Texas", "lat": 31.9, "lon": -99.9, "risk": 85.0},
-        {"country": "Brasil", "name": "Mato Grosso", "lat": -12.6, "lon": -55.4, "risk": 91.4},
-        {"country": "Australia", "name": "Queensland", "lat": -20.9, "lon": 142.7, "risk": 96.8}
+        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "risk": 94.2, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "risk": 88.5, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Coahuila", "lat": 27.3, "lon": -101.7, "risk": 86.1, "weather": "Normal"},
+        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "risk": 82.3, "weather": "Viento Fuerte"},
+        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "risk": 55.2, "weather": "Nublado"},
+        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "risk": 41.5, "weather": "Lluvias Fuertes"},
+        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "risk": 35.1, "weather": "Tormenta Eléctrica"},
+        {"country": "USA", "name": "Texas", "lat": 31.9, "lon": -99.9, "risk": 85.0, "weather": "Mucho Sol"},
+        {"country": "Brasil", "name": "Mato Grosso", "lat": -12.6, "lon": -55.4, "risk": 91.4, "weather": "Nublado"},
+        {"country": "Australia", "name": "Queensland", "lat": -20.9, "lon": 142.7, "risk": 96.8, "weather": "Mucho Sol"}
     ]
     return pd.DataFrame(base).sort_values("name")
 
@@ -145,14 +145,35 @@ with col_side:
 
     data = df[df['name'] == st.session_state.selected_state].iloc[0]
     risk = data['risk']
+    weather = data['weather']
+    
+    weather_icons = {
+        "Mucho Sol": "☀️",
+        "Lluvias Fuertes": "🌧️",
+        "Normal": "🌤️",
+        "Nublado": "☁️",
+        "Tormenta Eléctrica": "⛈️",
+        "Viento Fuerte": "🌬️"
+    }
+    w_icon = weather_icons.get(weather, "🌡️")
+
     color = "#ff4b4b" if risk > 85 else ("#E8B547" if risk > 50 else "#4caf50")
     status = "CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 else "ÓPTIMO")
 
     st.markdown(f"""
         <div class="sidebar-section" style="border-top: 4px solid {color};">
-            <p style="font-size:0.7rem; color:#94a3b8; margin:0;">ESTADO ACTUAL: <b style="color:{color}">{status}</b></p>
-            <p style="font-size:1.1rem; font-weight:700; margin:5px 0;">{data['name']}</p>
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                    <p style="font-size:0.7rem; color:#94a3b8; margin:0;">ESTADO ACTUAL: <b style="color:{color}">{status}</b></p>
+                    <p style="font-size:1.1rem; font-weight:700; margin:5px 0;">{data['name']}</p>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 1.5rem;" title="{weather}">{w_icon}</span>
+                    <p style="font-size: 0.6rem; color: #94a3b8; margin: 0;">{weather}</p>
+                </div>
+            </div>
             <p style="font-size:2.8rem; font-weight:700; color:#fff; margin:0;">{risk:.1f}%</p>
+            <p style="font-size:0.7rem; color:#94a3b8; margin:0;">RIESGO TÉRMICO</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -176,8 +197,8 @@ with col_map:
         lon = df['lon'], lat = df['lat'], text = df['name'],
         mode = 'markers+text', textposition = 'top center', name = "",
         marker = dict(size = 14, color = df['risk'], colorscale = [[0, '#4caf50'], [0.5, '#E8B547'], [1, '#ff4b4b']], line = dict(width=1, color='white'), opacity = 0.9),
-        showlegend = False, customdata = df['name'],
-        hovertemplate = "<b>%{text}</b><br>Riesgo: %{marker.color}%<extra></extra>"
+        showlegend = False, customdata = df[['name', 'weather', 'risk']],
+        hovertemplate = "<b>%{customdata[0]}</b><br>Clima: %{customdata[1]}<br>Riesgo: %{customdata[2]}%<extra></extra>"
     ))
 
     fig.add_trace(go.Scattergeo(
