@@ -135,7 +135,38 @@ st.markdown("""
         .ai-protocol-card { padding: 10px !important; }
         .protocol-body { font-size: 0.7rem !important; }
     }
+    
+    /* Botón de Cerrar (Tache) Flotante */
+    .close-button-cri {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        background: rgba(10, 14, 20, 0.8);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 999999;
+        font-size: 24px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        text-decoration: none;
+    }
+    .close-button-cri:hover {
+        background: rgba(232, 181, 71, 0.9);
+        border-color: #E8B547;
+        transform: scale(1.1);
+        color: #05070a;
+    }
 </style>
+
+<div class="close-button-cri" onclick="window.parent.postMessage('close_cri', '*')">×</div>
 """, unsafe_allow_html=True)
 
 # Datos maestros dinámicos
