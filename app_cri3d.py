@@ -13,57 +13,6 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-import streamlit.components.v1 as components
-
-# Inyectar el botón de cerrar flotante que envía un mensaje a Flutter
-components.html(
-    """
-    <script>
-        const btn = window.parent.document.createElement('div');
-        btn.innerHTML = `
-            <style>
-                .custom-close-btn {
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    width: 45px;
-                    height: 45px;
-                    background-color: rgba(10, 14, 20, 0.8);
-                    border: 2px solid rgba(255, 255, 255, 0.24);
-                    border-radius: 50%;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    cursor: pointer;
-                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.54);
-                    z-index: 999999;
-                    transition: all 0.2s ease;
-                }
-                .custom-close-btn:hover {
-                    background-color: rgba(20, 24, 30, 0.9);
-                    transform: scale(1.05);
-                }
-                .custom-close-btn svg {
-                    fill: white;
-                    width: 24px;
-                    height: 24px;
-                }
-            </style>
-            <div class="custom-close-btn" onclick="window.top.postMessage('close_cri_3d', '*');">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                </svg>
-            </div>
-        `;
-        if (!window.parent.document.querySelector('.custom-close-btn')) {
-            window.parent.document.body.appendChild(btn);
-        }
-    </script>
-    """,
-    height=0,
-    width=0,
-)
-
 # Estilos CSS - Estética Escudo Ganadero
 st.markdown("""
 <style>
