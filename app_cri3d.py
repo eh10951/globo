@@ -55,20 +55,47 @@ st.markdown("""
         text-align: center;
     }
     .ai-protocol-card {
-        background: rgba(232, 181, 71, 0.03);
-        border-radius: 14px;
-        padding: 15px;
-        margin-top: 10px;
-        border: 1px solid rgba(232, 181, 71, 0.25);
+        background: linear-gradient(135deg, rgba(232, 181, 71, 0.08) 0%, rgba(0,0,0,0.2) 100%);
+        border-radius: 16px;
+        padding: 18px;
+        margin-top: 15px;
+        border: 1px solid rgba(232, 181, 71, 0.2);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .ai-protocol-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 4px; height: 100%;
+        background: #E8B547;
     }
     .protocol-header {
         color: #E8B547;
-        font-weight: 700;
-        font-size: 0.75rem;
+        font-weight: 800;
+        font-size: 0.7rem;
         text-transform: uppercase;
-        margin-bottom: 8px;
+        letter-spacing: 2px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
-    .protocol-body { font-size: 0.8rem; line-height: 1.4; color: #cbd5e1; }
+    .protocol-body { 
+        font-size: 0.85rem; 
+        line-height: 1.5; 
+        color: #e2e8f0; 
+        font-weight: 400;
+    }
+    .ai-badge {
+        background: rgba(232, 181, 71, 0.15);
+        color: #E8B547;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.6rem;
+        font-weight: 900;
+        border: 1px solid rgba(232, 181, 71, 0.3);
+    }
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden; display: none !important;}
     header {visibility: hidden; display: none !important;}
@@ -177,14 +204,17 @@ with col_side:
 </div>
 """, unsafe_allow_html=True)
 
-    if risk > 85: protocol = "🚨 **ALERTA CRÍTICA**: Estrés térmico extremo. Activar aspersores cada 15 min, agua a <20°C."
-    elif risk > 65: protocol = "⚠️ **AVISO PREVENTIVO**: ITH elevado. Garantizar sombra total para el hato."
-    elif risk > 40: protocol = "⚖️ **MODERADO**: Condiciones estables. Monitorear hidratación."
-    else: protocol = "✅ **ÓPTIMO**: Condiciones ideales. Autorizado pastoreo intensivo."
+    if risk > 85: protocol = "🚨 <b style='color:#ff4b4b'>ALERTA CRÍTICA</b>: Estrés térmico extremo detectado. Se requiere activar aspersores cada 15 min y asegurar agua a <20°C inmediatamente."
+    elif risk > 65: protocol = "⚠️ <b style='color:#E8B547'>AVISO PREVENTIVO</b>: Índice térmico elevado. Es imperativo garantizar sombra total y ventilación para el hato."
+    elif risk > 40: protocol = "⚖️ <b style='color:#3498DB'>MODERADO</b>: Condiciones ambientales estables. Mantener monitoreo preventivo de hidratación."
+    else: protocol = "✅ <b style='color:#4caf50'>ESTADO ÓPTIMO</b>: Condiciones ideales para la producción. Autorizado pastoreo intensivo sin restricciones."
 
     st.markdown(f"""
         <div class="ai-protocol-card">
-            <div class="protocol-header">Sugerencias IA</div>
+            <div class="protocol-header">
+                <span class="ai-badge">AI</span>
+                SUGERENCIAS DE PROTOCOLO
+            </div>
             <div class="protocol-body">{protocol}</div>
         </div>
     """, unsafe_allow_html=True)
