@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import time
+import random
+import numpy as np
 
 # Configuración de página
 st.set_page_config(
@@ -135,21 +138,42 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Datos maestros
-@st.cache_data
+# Datos maestros dinámicos
 def get_data():
+    # Usamos la hora actual para crear un "seed" que cambie cada 30 minutos (1800 segundos)
+    # Esto hace que los datos sean "dinámicos" pero consistentes durante ese periodo
+    seed_time = int(time.time() / 1800)
+    random.seed(seed_time)
+    
     base = [
-        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "risk": 94.2, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "risk": 88.5, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Coahuila", "lat": 27.3, "lon": -101.7, "risk": 86.1, "weather": "Normal"},
-        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "risk": 82.3, "weather": "Viento Fuerte"},
-        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "risk": 55.2, "weather": "Nublado"},
-        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "risk": 41.5, "weather": "Lluvias Fuertes"},
-        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "risk": 35.1, "weather": "Tormenta Eléctrica"},
-        {"country": "USA", "name": "Texas", "lat": 31.9, "lon": -99.9, "risk": 85.0, "weather": "Mucho Sol"},
-        {"country": "Brasil", "name": "Mato Grosso", "lat": -12.6, "lon": -55.4, "risk": 91.4, "weather": "Nublado"},
-        {"country": "Australia", "name": "Queensland", "lat": -20.9, "lon": 142.7, "risk": 96.8, "weather": "Mucho Sol"}
+        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "risk": 92.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "risk": 87.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Coahuila", "lat": 27.3, "lon": -101.7, "risk": 84.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "risk": 78.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "risk": 52.0, "weather": "Nublado"},
+        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "risk": 40.0, "weather": "Normal"},
+        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "risk": 32.0, "weather": "Lluvias Fuertes"},
+        {"country": "USA", "name": "Texas", "lat": 31.9, "lon": -99.9, "risk": 82.0, "weather": "Mucho Sol"},
+        {"country": "Brasil", "name": "Mato Grosso", "lat": -12.6, "lon": -55.4, "risk": 89.0, "weather": "Mucho Sol"},
+        {"country": "Australia", "name": "Queensland", "lat": -20.9, "lon": 142.7, "risk": 94.0, "weather": "Mucho Sol"}
     ]
+    
+    # Aplicar fluctuación dinámica
+    for item in base:
+        # Variación de +/- 5% según el tiempo
+        variation = random.uniform(-5.0, 8.0)
+        item['risk'] = max(0, min(100, item['risk'] + variation))
+        
+        # Cambiar clima dinámicamente según el riesgo actual
+        if item['risk'] > 85:
+            item['weather'] = "Mucho Sol"
+        elif item['risk'] > 70:
+            item['weather'] = random.choice(["Mucho Sol", "Viento Fuerte", "Normal"])
+        elif item['risk'] > 50:
+            item['weather'] = random.choice(["Nublado", "Normal", "Lluvias Fuertes"])
+        elif item['risk'] < 35:
+            item['weather'] = random.choice(["Lluvias Fuertes", "Tormenta Eléctrica"])
+
     return pd.DataFrame(base).sort_values("name")
 
 df = get_data()
