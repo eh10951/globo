@@ -97,24 +97,28 @@ st.markdown("""
         border: 1px solid rgba(232, 181, 71, 0.3);
     }
     #MainMenu {visibility: hidden;}
-    footer {visibility: hidden; display: none !important;}
-    header {visibility: hidden; display: none !important;}
+    footer {display: none !important; visibility: hidden !important;}
+    header {display: none !important; visibility: hidden !important;}
     #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
     .stAppDeployButton {display: none !important;}
-    .st-emotion-cache-1kyy7id {display: none !important;}
-    .st-emotion-cache-zq5wmm {display: none !important;}
-    button[title="View fullscreen"] {display: none !important;}
+    /* Ocultar elementos de control de Streamlit y marca de agua */
+    [data-testid="stStatusWidget"], [data-testid="stFooter"], [data-testid="stHeader"], .st-emotion-cache-1vt4y6f, .viewerBadge_container__1QSob {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+    /* Ocultar botón de pantalla completa y decoración superior */
+    button[title="View fullscreen"], [data-testid="stDecoration"], .stAppToolbar, .stFullScreenFrame {
+        display: none !important;
+    }
     .block-container { padding: 0.5rem 2rem !important; }
     #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem !important;}
     /* Ocultar scrollbar para vista limpia */
     .stApp { overflow: hidden !important; }
     ::-webkit-scrollbar { display: none; }
-    /* Eliminación total de marca de agua de Streamlit */
-    div[data-testid="stFooter"] {display: none !important;}
-    div[data-testid="stStatusWidget"] {display: none !important;}
-    .viewerBadge_container__1QSob {display: none !important;}
-    .stAppToolbar {display: none !important;}
-    .st-emotion-cache-1vt4y6f {display: none !important;}
     
     /* Responsividad para Móviles */
     @media (max-width: 600px) {
