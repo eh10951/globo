@@ -161,19 +161,17 @@ with col_side:
     status = "CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 else "ÓPTIMO")
 
     st.markdown(f"""
-        <div class="sidebar-section" style="border-top: 4px solid {color};">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-                <div>
-                    <p style="font-size:0.7rem; color:#94a3b8; margin:0;">ESTADO ACTUAL: <b style="color:{color}">{status}</b></p>
-                    <p style="font-size:1.1rem; font-weight:700; margin:5px 0;">{data['name']}</p>
-                </div>
-                <div style="text-align: right;">
-                    <span style="font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));" title="{weather}">{w_icon}</span>
-                    <p style="font-size: 0.65rem; color: #94a3b8; margin: 0; font-weight: 600;">{weather}</p>
-                </div>
+        <div class="sidebar-section" style="border-top: 4px solid {color}; text-align: center; padding: 20px 15px;">
+            <p style="font-size:0.7rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 1px;">ESTADO ACTUAL: <b style="color:{color}">{status}</b></p>
+            
+            <div style="margin: 15px 0;">
+                <span style="font-size: 3rem; display: block; filter: drop-shadow(0 0 15px {color}44);" title="{weather}">{w_icon}</span>
+                <p style="font-size: 0.8rem; color: #fff; margin: 5px 0 0 0; font-weight: 600;">{weather}</p>
             </div>
-            <p style="font-size:2.8rem; font-weight:700; color:#fff; margin:0;">{risk:.1f}%</p>
-            <p style="font-size:0.7rem; color:#94a3b8; margin:0;">RIESGO TÉRMICO</p>
+
+            <p style="font-size:1.3rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
+            <p style="font-size:3.5rem; font-weight:800; color:#fff; margin:0; line-height: 1.1;">{risk:.1f}%</p>
+            <p style="font-size:0.7rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 2px;">RIESGO TÉRMICO</p>
         </div>
     """, unsafe_allow_html=True)
 
