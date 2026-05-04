@@ -168,8 +168,8 @@ with col_side:
                     <p style="font-size:1.1rem; font-weight:700; margin:5px 0;">{data['name']}</p>
                 </div>
                 <div style="text-align: right;">
-                    <span style="font-size: 1.5rem;" title="{weather}">{w_icon}</span>
-                    <p style="font-size: 0.6rem; color: #94a3b8; margin: 0;">{weather}</p>
+                    <span style="font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));" title="{weather}">{w_icon}</span>
+                    <p style="font-size: 0.65rem; color: #94a3b8; margin: 0; font-weight: 600;">{weather}</p>
                 </div>
             </div>
             <p style="font-size:2.8rem; font-weight:700; color:#fff; margin:0;">{risk:.1f}%</p>
