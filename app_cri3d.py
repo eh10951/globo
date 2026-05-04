@@ -161,19 +161,17 @@ with col_side:
     status = "CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 else "ÓPTIMO")
 
     st.markdown(f"""
-        <div class="sidebar-section" style="border-top: 4px solid {color}; text-align: center; padding: 20px 15px;">
-            <p style="font-size:0.7rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 1px;">ESTADO ACTUAL: <b style="color:{color}">{status}</b></p>
-            
-            <div style="margin: 15px 0;">
-                <span style="font-size: 3rem; display: block; filter: drop-shadow(0 0 15px {color}44);" title="{weather}">{w_icon}</span>
-                <p style="font-size: 0.8rem; color: #fff; margin: 5px 0 0 0; font-weight: 600;">{weather}</p>
-            </div>
-
-            <p style="font-size:1.3rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
-            <p style="font-size:3.5rem; font-weight:800; color:#fff; margin:0; line-height: 1.1;">{risk:.1f}%</p>
-            <p style="font-size:0.7rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 2px;">RIESGO TÉRMICO</p>
-        </div>
-    """, unsafe_allow_html=True)
+<div class="sidebar-section" style="border-top: 4px solid {color}; text-align: center; padding: 20px 15px;">
+<p style="font-size:0.7rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 1px;">ESTADO ACTUAL: <b style="color:{color}">{status}</b></p>
+<div style="margin: 15px 0;">
+<span style="font-size: 3rem; display: block; filter: drop-shadow(0 0 15px {color}44);" title="{weather}">{w_icon}</span>
+<p style="font-size: 0.8rem; color: #fff; margin: 5px 0 0 0; font-weight: 600;">{weather}</p>
+</div>
+<p style="font-size:1.3rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
+<p style="font-size:3.5rem; font-weight:800; color:#fff; margin:0; line-height: 1.1;">{risk:.1f}%</p>
+<p style="font-size:0.7rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 2px;">RIESGO TÉRMICO</p>
+</div>
+""", unsafe_allow_html=True)
 
     if risk > 85: protocol = "🚨 **ALERTA CRÍTICA**: Estrés térmico extremo. Activar aspersores cada 15 min, agua a <20°C."
     elif risk > 65: protocol = "⚠️ **AVISO PREVENTIVO**: ITH elevado. Garantizar sombra total para el hato."
