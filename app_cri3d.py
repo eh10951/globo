@@ -185,7 +185,7 @@ with col_side:
     w_icon = weather_icons.get(weather, "🌡️")
 
     color = "#ff4b4b" if risk > 85 else ("#E8B547" if risk > 50 else "#4caf50")
-    status = "CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 else "ÓPTIMO")
+    status = "PELIGRO" if weather == "Tormenta Eléctrica" else ("CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 or weather == "Lluvias Fuertes" else "ÓPTIMO"))
 
     st.markdown(f"""
 <div class="sidebar-section" style="border-top: 4px solid {color}; padding: 15px;">
@@ -204,10 +204,20 @@ with col_side:
 </div>
 """, unsafe_allow_html=True)
 
-    if risk > 85: protocol = "🚨 <b style='color:#ff4b4b'>ALERTA CRÍTICA</b>: Estrés térmico extremo detectado. Se requiere activar aspersores cada 15 min y asegurar agua a <20°C inmediatamente."
-    elif risk > 65: protocol = "⚠️ <b style='color:#E8B547'>AVISO PREVENTIVO</b>: Índice térmico elevado. Es imperativo garantizar sombra total y ventilación para el hato."
-    elif risk > 40: protocol = "⚖️ <b style='color:#3498DB'>MODERADO</b>: Condiciones ambientales estables. Mantener monitoreo preventivo de hidratación."
-    else: protocol = "✅ <b style='color:#4caf50'>ESTADO ÓPTIMO</b>: Condiciones ideales para la producción. Autorizado pastoreo intensivo sin restricciones."
+    if weather == "Tormenta Eléctrica":
+        protocol = "⛈️ <b style='color:#ff4b4b'>PELIGRO</b>: Tormenta eléctrica activa. <b>PROHIBIDO</b> el pastoreo en áreas abiertas. Resguardar al hato en establos protegidos por riesgo de rayos."
+    elif weather == "Lluvias Fuertes":
+        protocol = "🌧️ <b style='color:#E8B547'>AVISO</b>: Lluvias intensas. Riesgo de lodo y estrés por humedad. Se recomienda resguardar en áreas cubiertas y monitorear salud podal."
+    elif risk > 85:
+        protocol = "🚨 <b style='color:#ff4b4b'>ALERTA CRÍTICA</b>: Estrés térmico extremo detectado. Se requiere activar aspersores cada 15 min y asegurar agua a <20°C inmediatamente."
+    elif risk > 65:
+        protocol = "⚠️ <b style='color:#E8B547'>AVISO PREVENTIVO</b>: Índice térmico elevado. Es imperativo garantizar sombra total y ventilación para el hato."
+    elif weather == "Viento Fuerte":
+        protocol = "🌬️ <b style='color:#3498DB'>AVISO POR VIENTO</b>: Vientos fuertes detectados. Asegurar estructuras ligeras y monitorear posible irritación ocular en el hato."
+    elif risk > 40:
+        protocol = "⚖️ <b style='color:#3498DB'>MODERADO</b>: Condiciones ambientales estables. Mantener monitoreo preventivo de hidratación."
+    else:
+        protocol = "✅ <b style='color:#4caf50'>ESTADO ÓPTIMO</b>: Condiciones ideales para la producción. Autorizado pastoreo intensivo sin restricciones."
 
     st.markdown(f"""
         <div class="ai-protocol-card">
