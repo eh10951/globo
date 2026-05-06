@@ -274,55 +274,52 @@ with col_side:
     """, unsafe_allow_html=True)
 
 with col_map:
-    # Lógica de Rotación Suave
-    if 'rotation_lon' not in st.session_state:
-        st.session_state.rotation_lon = data['lon']
-    
-    # Efecto de inercia/seguimiento suave: la cámara se mueve hacia el punto seleccionado
-    # pero mantiene un desplazamiento constante para el efecto de rotación
-    target_lon = data['lon']
-    diff = target_lon - st.session_state.rotation_lon
-    
-    # Si la diferencia es muy grande (ej. cambio de país), saltamos un poco más rápido
-    step = 0.05 if abs(diff) < 30 else 0.1
-    st.session_state.rotation_lon += diff * step + 0.15 # 0.15 es el drift constante
+    # Contenedor para el globo con fragmento para rotación suave e independiente
+    @st.fragment(run_every=0.1)
+    def render_animated_globe(data, df, color):
+        # Lógica de Rotación
+        if 'rotation_lon' not in st.session_state:
+            st.session_state.rotation_lon = data['lon']
+        
+        target_lon = data['lon']
+        diff = target_lon - st.session_state.rotation_lon
+        
+        # Inercia suave hacia el objetivo + drift constante
+        step = 0.05 if abs(diff) < 30 else 0.15
+        st.session_state.rotation_lon += diff * step + 0.12 # Drift suave
 
-    # GLOBO AZUL REAL (No negro)
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scattergeo(
-        lon = df['lon'], lat = df['lat'], text = df['name'],
-        mode = 'markers+text', textposition = 'top center', name = "",
-        marker = dict(size = 14, color = df['risk'], colorscale = [[0, '#4caf50'], [0.5, '#E8B547'], [1, '#ff4b4b']], line = dict(width=1, color='white'), opacity = 0.9),
-        showlegend = False, customdata = df[['name', 'weather', 'risk']],
-        hovertemplate = "<b>%{customdata[0]}</b><br>Clima: %{customdata[1]}<br>Riesgo: %{customdata[2]}%<extra></extra>"
-    ))
+        # GLOBO AZUL REAL
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scattergeo(
+            lon = df['lon'], lat = df['lat'], text = df['name'],
+            mode = 'markers+text', textposition = 'top center', name = "",
+            marker = dict(size = 14, color = df['risk'], colorscale = [[0, '#4caf50'], [0.5, '#E8B547'], [1, '#ff4b4b']], line = dict(width=1, color='white'), opacity = 0.9),
+            showlegend = False, customdata = df[['name', 'weather', 'risk']],
+            hovertemplate = "<b>%{customdata[0]}</b><br>Clima: %{customdata[1]}<br>Riesgo: %{customdata[2]}%<extra></extra>"
+        ))
 
-    fig.add_trace(go.Scattergeo(
-        lon = [data['lon']], lat = [data['lat']], mode = 'markers',
-        marker = dict(size = 40, symbol = 'circle-open', line = dict(width=3, color=color)),
-        showlegend = False, hoverinfo = 'none'
-    ))
+        fig.add_trace(go.Scattergeo(
+            lon = [data['lon']], lat = [data['lat']], mode = 'markers',
+            marker = dict(size = 40, symbol = 'circle-open', line = dict(width=3, color=color)),
+            showlegend = False, hoverinfo = 'none'
+        ))
 
-    fig.update_layout(
-        height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
-        paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
-        geo = dict(
-            projection_type = "orthographic",
-            showcoastlines = True, coastlinecolor = "#3498DB",
-            showland = True, landcolor = "#1F2F45", # Azul Grisáceo elegante
-            showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
-            showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
-            bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.92, 
-            projection_rotation = dict(lon=st.session_state.rotation_lon, lat=data['lat'], roll=0)
-        ),
-        transition = {'duration': 0, 'easing': 'linear'} # La suavidad la da nuestro loop
-    )
+        fig.update_layout(
+            height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
+            paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
+            geo = dict(
+                projection_type = "orthographic",
+                showcoastlines = True, coastlinecolor = "#3498DB",
+                showland = True, landcolor = "#1F2F45",
+                showocean = True, oceancolor = "#121926",
+                showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
+                bgcolor = "rgba(0,0,0,0)",
+                projection_scale = 0.92, 
+                projection_rotation = dict(lon=st.session_state.rotation_lon, lat=data['lat'], roll=0)
+            )
+        )
 
-    # Contenedor para el mapa con Sol y Luna superpuestos mediante CSS
-    map_container = st.container()
-    with map_container:
         st.markdown("""
             <div style="position: relative; touch-action: none;">
                 <!-- SOL PROFESIONAL (Resplandor Intenso) -->
@@ -350,13 +347,12 @@ with col_map:
         
         selection = st.plotly_chart(fig, use_container_width=True, on_select="rerun", config={'displayModeBar': False})
 
-    if selection and "selection" in selection and selection["selection"]["points"]:
-        clicked_name = selection["selection"]["points"][0]["text"]
-        if clicked_name != st.session_state.selected_state:
-            st.session_state.selected_state = clicked_name
-            st.session_state.selected_country = df[df['name'] == clicked_name]['country'].iloc[0]
-            st.rerun()
+        if selection and "selection" in selection and selection["selection"]["points"]:
+            clicked_name = selection["selection"]["points"][0]["text"]
+            if clicked_name != st.session_state.selected_state:
+                st.session_state.selected_state = clicked_name
+                st.session_state.selected_country = df[df['name'] == clicked_name]['country'].iloc[0]
+                st.rerun()
 
-# Forzar actualización para la animación (Rotación Suave)
-time.sleep(0.01)
-st.rerun()
+    # Ejecutar el fragmento
+    render_animated_globe(data, df, color)
