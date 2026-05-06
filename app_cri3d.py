@@ -206,7 +206,17 @@ with col_side:
     
     # Cálculo ITH dinámico basado en sliders
     ith = calculate_ith(sim_temp, sim_hum)
-    weather = data['weather']
+    # Lógica dinámica de clima basado en simulación
+    if sim_hum > 85:
+        weather = "Tormenta Eléctrica" if sim_temp > 30 else "Lluvias Fuertes"
+    elif sim_hum > 65:
+        weather = "Nublado"
+    elif sim_temp > 36:
+        weather = "Mucho Sol"
+    elif sim_temp < 15:
+        weather = "Viento Fuerte"
+    else:
+        weather = "Normal"
     
     weather_icons = {
         "Mucho Sol": "☀️",
