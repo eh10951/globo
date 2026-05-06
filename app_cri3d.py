@@ -135,6 +135,21 @@ st.markdown("""
         .ai-protocol-card { padding: 10px !important; }
         .protocol-body { font-size: 0.7rem !important; }
     }
+    
+    /* Animaciones para Sol y Luna */
+    @keyframes glow-sun {
+        0% { box-shadow: 0 0 15px #fff, 0 0 40px #E8B547, 0 0 70px #E8B547; transform: scale(1); }
+        50% { box-shadow: 0 0 25px #fff, 0 0 60px #E8B547, 0 0 100px #E8B547; transform: scale(1.05); }
+        100% { box-shadow: 0 0 15px #fff, 0 0 40px #E8B547, 0 0 70px #E8B547; transform: scale(1); }
+    }
+    .sun-glow { animation: glow-sun 4s infinite ease-in-out; }
+    
+    @keyframes glow-moon {
+        0% { box-shadow: 0 0 8px #fff, 0 0 20px rgba(148, 163, 184, 0.4); transform: scale(1); }
+        50% { box-shadow: 0 0 15px #fff, 0 0 35px rgba(148, 163, 184, 0.6); transform: scale(1.03); }
+        100% { box-shadow: 0 0 8px #fff, 0 0 20px rgba(148, 163, 184, 0.4); transform: scale(1); }
+    }
+    .moon-glow { animation: glow-moon 6s infinite ease-in-out; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -183,6 +198,14 @@ if 'selected_country' not in st.session_state: st.session_state.selected_country
 
 # UI con centrado vertical absoluto y balance de márgenes
 col_map, col_side, col_spacer = st.columns([3.5, 1.5, 0.3], gap="large", vertical_alignment="center")
+
+# Definición de Temas
+THEMES = {
+    "CRI Intelligence (Azul)": {"land": "#1F2F45", "ocean": "#121926", "coast": "#3498DB", "scale": [[0, '#4caf50'], [0.5, '#E8B547'], [1, '#ff4b4b']]},
+    "Dark Onyx (Oscuro)": {"land": "#0A0A0A", "ocean": "#000000", "coast": "#333333", "scale": "Hot"},
+    "Satellite Natural": {"land": "#228B22", "ocean": "#1E90FF", "coast": "#FFFFFF", "scale": "Reds"},
+    "Cyber Neon": {"land": "#000000", "ocean": "#051105", "coast": "#00FF00", "scale": [[0, '#00ff00'], [1, '#ff00ff']]}
+}
 
 with col_side:
     st.markdown("<div class='title-panel'><p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
@@ -258,63 +281,79 @@ with col_side:
         </div>
     """, unsafe_allow_html=True)
 
+    st.markdown("<br>", unsafe_allow_html=True)
+    with st.expander("🎨 CONFIGURACIÓN VISUAL", expanded=False):
+        theme_name = st.selectbox("Tema del Globo", list(THEMES.keys()), index=0)
+        auto_rotate = st.checkbox("Rotación Suave", value=True)
+        st.session_state.current_theme = THEMES[theme_name]
+
 with col_map:
-    # GLOBO AZUL REAL (No negro)
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scattergeo(
-        lon = df['lon'], lat = df['lat'], text = df['name'],
-        mode = 'markers+text', textposition = 'top center', name = "",
-        marker = dict(size = 14, color = df['risk'], colorscale = [[0, '#4caf50'], [0.5, '#E8B547'], [1, '#ff4b4b']], line = dict(width=1, color='white'), opacity = 0.9),
-        showlegend = False, customdata = df[['name', 'weather', 'risk']],
-        hovertemplate = "<b>%{customdata[0]}</b><br>Clima: %{customdata[1]}<br>Riesgo: %{customdata[2]}%<extra></extra>"
-    ))
+    # Lógica de Fragmento para permitir rotación sin recargar toda la página
+    @st.fragment(run_every=0.1 if auto_rotate else None)
+    def globe_view(data, df, color, theme):
+        # Lógica de Rotación
+        if 'rotation_lon' not in st.session_state:
+            st.session_state.rotation_lon = data['lon']
+        
+        if auto_rotate:
+            target_lon = data['lon']
+            diff = target_lon - st.session_state.rotation_lon
+            # Inercia suave hacia el punto seleccionado + drift constante
+            step = 0.05 if abs(diff) < 30 else 0.15
+            st.session_state.rotation_lon += diff * step + 0.12
+        else:
+            st.session_state.rotation_lon = data['lon']
 
-    fig.add_trace(go.Scattergeo(
-        lon = [data['lon']], lat = [data['lat']], mode = 'markers',
-        marker = dict(size = 40, symbol = 'circle-open', line = dict(width=3, color=color)),
-        showlegend = False, hoverinfo = 'none'
-    ))
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scattergeo(
+            lon = df['lon'], lat = df['lat'], text = df['name'],
+            mode = 'markers+text', textposition = 'top center', name = "",
+            marker = dict(size = 14, color = df['risk'], colorscale = theme['scale'], line = dict(width=1, color='white'), opacity = 0.9),
+            showlegend = False, customdata = df[['name', 'weather', 'risk']],
+            hovertemplate = "<b>%{customdata[0]}</b><br>Clima: %{customdata[1]}<br>Riesgo: %{customdata[2]}%<extra></extra>"
+        ))
 
-    fig.update_layout(
-        height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
-        paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
-        geo = dict(
-            projection_type = "orthographic",
-            showcoastlines = True, coastlinecolor = "#3498DB",
-            showland = True, landcolor = "#1F2F45", # Azul Grisáceo elegante
-            showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
-            showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
-            bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.92, 
-            projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
+        fig.add_trace(go.Scattergeo(
+            lon = [data['lon']], lat = [data['lat']], mode = 'markers',
+            marker = dict(size = 40, symbol = 'circle-open', line = dict(width=3, color=color)),
+            showlegend = False, hoverinfo = 'none'
+        ))
+
+        fig.update_layout(
+            height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
+            paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
+            geo = dict(
+                projection_type = "orthographic",
+                showcoastlines = True, coastlinecolor = theme['coast'],
+                showland = True, landcolor = theme['land'],
+                showocean = True, oceancolor = theme['ocean'],
+                showcountries = True, countrycolor = "rgba(255,255,255,0.1)",
+                bgcolor = "rgba(0,0,0,0)",
+                projection_scale = 0.92, 
+                projection_rotation = dict(lon=st.session_state.rotation_lon, lat=data['lat'], roll=0)
+            )
         )
-    )
 
-    # Contenedor para el mapa con Sol y Luna superpuestos mediante CSS
-    map_container = st.container()
-    with map_container:
-        st.markdown("""
+        st.markdown(f"""
             <div style="position: relative; touch-action: none;">
-                <!-- SOL PROFESIONAL (Resplandor Intenso) -->
-                <div style="
+                <!-- SOL PROFESIONAL -->
+                <div class="sun-glow" style="
                     position: absolute; 
                     top: 10%; left: 8%; 
                     width: 30px; height: 30px; 
                     background: #fff; 
                     border-radius: 50%; 
-                    box-shadow: 0 0 15px #fff, 0 0 40px #E8B547, 0 0 70px #E8B547;
                     z-index: 10;
                     pointer-events: none;
                 "></div>
-                <!-- LUNA PROFESIONAL (Ligeramente más baja que el sol) -->
-                <div style="
+                <!-- LUNA PROFESIONAL -->
+                <div class="moon-glow" style="
                     position: absolute; 
                     top: 22%; right: 10%; 
                     width: 22px; height: 22px; 
                     background: #E2E8F0; 
                     border-radius: 50%; 
-                    box-shadow: 0 0 8px #fff, 0 0 25px rgba(148, 163, 184, 0.4); 
                     z-index: 10;
                     pointer-events: none;
                 "></div>
@@ -323,9 +362,12 @@ with col_map:
         
         selection = st.plotly_chart(fig, use_container_width=True, on_select="rerun", config={'displayModeBar': False})
 
-    if selection and "selection" in selection and selection["selection"]["points"]:
-        clicked_name = selection["selection"]["points"][0]["text"]
-        if clicked_name != st.session_state.selected_state:
-            st.session_state.selected_state = clicked_name
-            st.session_state.selected_country = df[df['name'] == clicked_name]['country'].iloc[0]
-            st.rerun()
+        if selection and "selection" in selection and selection["selection"]["points"]:
+            clicked_name = selection["selection"]["points"][0]["text"]
+            if clicked_name != st.session_state.selected_state:
+                st.session_state.selected_state = clicked_name
+                st.session_state.selected_country = df[df['name'] == clicked_name]['country'].iloc[0]
+                st.rerun()
+
+    # Llamada al fragmento con el tema actual
+    globe_view(data, df, color, st.session_state.current_theme)
