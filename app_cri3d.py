@@ -135,6 +135,21 @@ st.markdown("""
         .ai-protocol-card { padding: 10px !important; }
         .protocol-body { font-size: 0.7rem !important; }
     }
+
+    /* Animaciones Premium */
+    @keyframes glow-sun {
+        0% { box-shadow: 0 0 15px #fff, 0 0 40px #E8B547, 0 0 70px #E8B547; transform: scale(1); }
+        50% { box-shadow: 0 0 25px #fff, 0 0 60px #E8B547, 0 0 100px #E8B547; transform: scale(1.05); }
+        100% { box-shadow: 0 0 15px #fff, 0 0 40px #E8B547, 0 0 70px #E8B547; transform: scale(1); }
+    }
+    .sun-glow { animation: glow-sun 4s infinite ease-in-out; }
+    
+    @keyframes glow-moon {
+        0% { box-shadow: 0 0 8px #fff, 0 0 20px rgba(148, 163, 184, 0.4); transform: scale(1); }
+        50% { box-shadow: 0 0 15px #fff, 0 0 35px rgba(148, 163, 184, 0.6); transform: scale(1.03); }
+        100% { box-shadow: 0 0 8px #fff, 0 0 20px rgba(148, 163, 184, 0.4); transform: scale(1); }
+    }
+    .moon-glow { animation: glow-moon 6s infinite ease-in-out; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -259,6 +274,19 @@ with col_side:
     """, unsafe_allow_html=True)
 
 with col_map:
+    # Lógica de Rotación Suave
+    if 'rotation_lon' not in st.session_state:
+        st.session_state.rotation_lon = data['lon']
+    
+    # Efecto de inercia/seguimiento suave: la cámara se mueve hacia el punto seleccionado
+    # pero mantiene un desplazamiento constante para el efecto de rotación
+    target_lon = data['lon']
+    diff = target_lon - st.session_state.rotation_lon
+    
+    # Si la diferencia es muy grande (ej. cambio de país), saltamos un poco más rápido
+    step = 0.05 if abs(diff) < 30 else 0.1
+    st.session_state.rotation_lon += diff * step + 0.15 # 0.15 es el drift constante
+
     # GLOBO AZUL REAL (No negro)
     fig = go.Figure()
     
@@ -287,8 +315,9 @@ with col_map:
             showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
             bgcolor = "rgba(0,0,0,0)",
             projection_scale = 0.92, 
-            projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
-        )
+            projection_rotation = dict(lon=st.session_state.rotation_lon, lat=data['lat'], roll=0)
+        ),
+        transition = {'duration': 0, 'easing': 'linear'} # La suavidad la da nuestro loop
     )
 
     # Contenedor para el mapa con Sol y Luna superpuestos mediante CSS
@@ -297,24 +326,22 @@ with col_map:
         st.markdown("""
             <div style="position: relative; touch-action: none;">
                 <!-- SOL PROFESIONAL (Resplandor Intenso) -->
-                <div style="
+                <div class="sun-glow" style="
                     position: absolute; 
                     top: 10%; left: 8%; 
                     width: 30px; height: 30px; 
                     background: #fff; 
                     border-radius: 50%; 
-                    box-shadow: 0 0 15px #fff, 0 0 40px #E8B547, 0 0 70px #E8B547;
                     z-index: 10;
                     pointer-events: none;
                 "></div>
-                <!-- LUNA PROFESIONAL (Ligeramente más baja que el sol) -->
-                <div style="
+                <!-- LUNA PROFESIONAL -->
+                <div class="moon-glow" style="
                     position: absolute; 
                     top: 22%; right: 10%; 
                     width: 22px; height: 22px; 
                     background: #E2E8F0; 
                     border-radius: 50%; 
-                    box-shadow: 0 0 8px #fff, 0 0 25px rgba(148, 163, 184, 0.4); 
                     z-index: 10;
                     pointer-events: none;
                 "></div>
@@ -329,3 +356,7 @@ with col_map:
             st.session_state.selected_state = clicked_name
             st.session_state.selected_country = df[df['name'] == clicked_name]['country'].iloc[0]
             st.rerun()
+
+# Forzar actualización para la animación (Rotación Suave)
+time.sleep(0.01)
+st.rerun()
