@@ -44,6 +44,16 @@ st.markdown("""
         touch-action: none !important;
         overscroll-behavior: none !important;
     }
+    section[data-testid="stSidebar"] {
+        background-color: #05070a !important;
+    }
+    /* Permitir scroll solo en la columna lateral si es necesario */
+    [data-testid="stVerticalBlock"] > div:nth-child(2) {
+        overflow-y: auto !important;
+        max-height: 95vh;
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(232, 181, 71, 0.3); border-radius: 10px; }
     .sidebar-section {
         background: rgba(26, 31, 46, 0.4);
         border: 1px solid rgba(232, 181, 71, 0.15);
@@ -207,8 +217,19 @@ THEMES = {
     "Cyber Neon": {"land": "#000000", "ocean": "#051105", "coast": "#00FF00", "scale": [[0, '#00ff00'], [1, '#ff00ff']]}
 }
 
+if 'current_theme' not in st.session_state:
+    st.session_state.current_theme = THEMES["CRI Intelligence (Azul)"]
+
 with col_side:
     st.markdown("<div class='title-panel'><p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
+    
+    # Selector de Temas - Movido al inicio para visibilidad
+    with st.expander("🎨 CONFIGURACIÓN VISUAL", expanded=True):
+        theme_name = st.selectbox("Tema del Globo", list(THEMES.keys()), index=0)
+        auto_rotate = st.checkbox("Rotación Suave", value=True)
+        st.session_state.current_theme = THEMES[theme_name]
+    
+    st.markdown("<br>", unsafe_allow_html=True)
     
     countries = df['country'].unique().tolist()
     country_choice = st.selectbox("País", countries, index=countries.index(st.session_state.selected_country))
@@ -280,12 +301,6 @@ with col_side:
             <div class="protocol-body">{protocol}</div>
         </div>
     """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    with st.expander("🎨 CONFIGURACIÓN VISUAL", expanded=False):
-        theme_name = st.selectbox("Tema del Globo", list(THEMES.keys()), index=0)
-        auto_rotate = st.checkbox("Rotación Suave", value=True)
-        st.session_state.current_theme = THEMES[theme_name]
 
 with col_map:
     # Lógica de Fragmento para permitir rotación sin recargar toda la página
