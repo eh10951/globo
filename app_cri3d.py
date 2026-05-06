@@ -200,23 +200,20 @@ with col_side:
     data = df[df['name'] == st.session_state.selected_state].iloc[0]
     
     # Gestión de estado de simulación
-    if 'last_state' not in st.session_state or st.session_state.last_state != st.session_state.selected_state:
-        st.session_state.sim_temp = float(data['temp'])
-        st.session_state.sim_hum = float(data['hum'])
+    if 'temp_slider' not in st.session_state or st.session_state.last_state != st.session_state.selected_state:
+        st.session_state.temp_slider = float(data['temp'])
+        st.session_state.hum_slider = float(data['hum'])
         st.session_state.last_state = st.session_state.selected_state
 
     # SIMULADOR DE ESCENARIOS PREVENTIVOS (WHAT-IF)
     st.markdown("<p style='font-size:0.7rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
     
-    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, st.session_state.sim_temp, step=0.5, key="temp_slider")
-    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, st.session_state.sim_hum, step=1.0, key="hum_slider")
+    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, key="temp_slider", step=0.5)
+    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, key="hum_slider", step=1.0)
     
-    st.session_state.sim_temp = sim_temp
-    st.session_state.sim_hum = sim_hum
-
     if st.button("🔄 Restablecer a Tiempo Real", use_container_width=True):
-        st.session_state.sim_temp = float(data['temp'])
-        st.session_state.sim_hum = float(data['hum'])
+        st.session_state.temp_slider = float(data['temp'])
+        st.session_state.hum_slider = float(data['hum'])
         st.rerun()
 
     # Cálculo ITH dinámico basado en sliders
