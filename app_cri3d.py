@@ -221,15 +221,15 @@ if 'current_theme' not in st.session_state:
     st.session_state.current_theme = THEMES["CRI Intelligence (Azul)"]
 
 with col_side:
+    # SECCIÓN DE TEMAS - AL PRINCIPIO Y SIN EXPANDER PARA MÁXIMA VISIBILIDAD
+    st.markdown("<p style='margin:0; font-size:0.8rem; color:#E8B547; font-weight:700;'>🎨 ESTILO VISUAL</p>", unsafe_allow_html=True)
+    theme_name = st.selectbox("Tema", list(THEMES.keys()), index=0, label_visibility="collapsed")
+    auto_rotate = st.toggle("Giro Automático", value=True)
+    st.session_state.current_theme = THEMES[theme_name]
+    
+    st.markdown("<div style='margin: 15px 0; border-bottom: 1px solid rgba(232,181,71,0.2);'></div>", unsafe_allow_html=True)
+    
     st.markdown("<div class='title-panel'><p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
-    
-    # Selector de Temas - Movido al inicio para visibilidad
-    with st.expander("🎨 CONFIGURACIÓN VISUAL", expanded=True):
-        theme_name = st.selectbox("Tema del Globo", list(THEMES.keys()), index=0)
-        auto_rotate = st.checkbox("Rotación Suave", value=True)
-        st.session_state.current_theme = THEMES[theme_name]
-    
-    st.markdown("<br>", unsafe_allow_html=True)
     
     countries = df['country'].unique().tolist()
     country_choice = st.selectbox("País", countries, index=countries.index(st.session_state.selected_country))
