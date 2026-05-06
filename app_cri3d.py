@@ -197,16 +197,16 @@ with col_side:
     st.session_state.selected_state = state_choice
 
     # Cargar datos base del estado
-    state_data = df[df['name'] == st.session_state.selected_state].iloc[0]
+    data = df[df['name'] == st.session_state.selected_state].iloc[0]
     
     # SIMULACIÓN DE SENSORES EN TIEMPO REAL
     st.markdown("<p style='font-size:0.7rem; color:#94a3b8; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px;'>Simulador de Sensores IOT</p>", unsafe_allow_html=True)
-    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, float(state_data['temp']), step=0.5)
-    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, float(state_data['hum']), step=1.0)
+    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, float(data['temp']), step=0.5)
+    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, float(data['hum']), step=1.0)
     
     # Cálculo ITH dinámico basado en sliders
     ith = calculate_ith(sim_temp, sim_hum)
-    weather = state_data['weather']
+    weather = data['weather']
     
     weather_icons = {
         "Mucho Sol": "☀️",
@@ -252,7 +252,7 @@ with col_side:
 </div>
 </div>
 <div style="text-align: center; margin-top: -15px;">
-<p style="font-size:1.2rem; font-weight:700; margin:0; color: #E8B547;">{state_data['name']}</p>
+<p style="font-size:1.2rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
 <p style="font-size:3.5rem; font-weight:800; color:#fff; margin:0; line-height: 1;">{ith:.1f}</p>
 <p style="font-size:0.7rem; color:#94a3b8; margin:5px 0 0 0; text-transform: uppercase; letter-spacing: 2px;">ÍNDICE ITH (ESTRÉS)</p>
 </div>
