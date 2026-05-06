@@ -199,8 +199,8 @@ with col_side:
     # Cargar datos base del estado
     data = df[df['name'] == st.session_state.selected_state].iloc[0]
     
-    # SIMULACIÓN DE SENSORES EN TIEMPO REAL
-    st.markdown("<p style='font-size:0.7rem; color:#94a3b8; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px;'>Simulador de Sensores IOT</p>", unsafe_allow_html=True)
+    # SIMULADOR DE ESCENARIOS PREVENTIVOS (WHAT-IF)
+    st.markdown("<p style='font-size:0.7rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
     sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, float(data['temp']), step=0.5)
     sim_hum = st.slider("Humedad (%)", 5.0, 100.0, float(data['hum']), step=1.0)
     
@@ -242,6 +242,14 @@ with col_side:
         color = "#ff4b4b"
         protocol = "⛈️ <b style='color:#ff4b4b'>PELIGRO ELÉCTRICO</b>: Tormenta detectada. <b>PROHIBIDO</b> el pastoreo en áreas abiertas. Resguardar al hato inmediatamente."
 
+    # Cálculo del Riesgo CRI (%) basado en el ITH
+    # Mapeamos el ITH (aprox 60-95) a una escala de 0-100%
+    if ith < 72:
+        cri_risk = (ith / 72) * 50
+    else:
+        cri_risk = 50 + ((ith - 72) / (95 - 72)) * 50
+    cri_risk = max(0, min(100, cri_risk))
+
     st.markdown(f"""
 <div class="sidebar-section" style="border-top: 4px solid {color}; padding: 15px;">
 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0px;">
@@ -252,11 +260,20 @@ with col_side:
 </div>
 </div>
 <div style="text-align: center; margin-top: -15px;">
-<p style="font-size:1.2rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
-<p style="font-size:3.5rem; font-weight:800; color:#fff; margin:0; line-height: 1;">{ith:.1f}</p>
-<p style="font-size:0.7rem; color:#94a3b8; margin:5px 0 0 0; text-transform: uppercase; letter-spacing: 2px;">ÍNDICE ITH (ESTRÉS)</p>
+<p style="font-size:1.1rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
+<div style="display: flex; justify-content: center; align-items: baseline; gap: 10px; margin-top: 5px;">
+    <div style="text-align: center;">
+        <p style="font-size:2.8rem; font-weight:800; color:#fff; margin:0; line-height: 1;">{ith:.1f}</p>
+        <p style="font-size:0.55rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 1px;">ÍNDICE ITH</p>
+    </div>
+    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.1); align-self: center;"></div>
+    <div style="text-align: center;">
+        <p style="font-size:1.8rem; font-weight:700; color:{color}; margin:0; line-height: 1;">{cri_risk:.0f}%</p>
+        <p style="font-size:0.55rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 1px;">RIESGO CRI</p>
+    </div>
 </div>
-<div style="display: flex; justify-content: space-around; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
+</div>
+<div style="display: flex; justify-content: space-around; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
     <div style="text-align: center;"><p style="margin:0; font-size:0.6rem; color:#94a3b8;">TEMP</p><p style="margin:0; font-size:0.8rem; font-weight:700;">{sim_temp}°C</p></div>
     <div style="text-align: center;"><p style="margin:0; font-size:0.6rem; color:#94a3b8;">HUM</p><p style="margin:0; font-size:0.8rem; font-weight:700;">{sim_hum}%</p></div>
 </div>
