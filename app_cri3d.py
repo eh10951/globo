@@ -138,41 +138,38 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Función para calcular ITH (Índice de Temperatura y Humedad)
+def calculate_ith(temp, rh):
+    # Fórmula de Thom (1959)
+    return (1.8 * temp + 32) - (0.55 - 0.55 * (rh / 100)) * (1.8 * temp - 26)
+
 # Datos maestros dinámicos
 def get_data():
-    # Usamos la hora actual para crear un "seed" que cambie cada 30 minutos (1800 segundos)
-    # Esto hace que los datos sean "dinámicos" pero consistentes durante ese periodo
     seed_time = int(time.time() / 1800)
     random.seed(seed_time)
     
     base = [
-        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "risk": 92.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "risk": 87.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Coahuila", "lat": 27.3, "lon": -101.7, "risk": 84.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "risk": 78.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "risk": 52.0, "weather": "Nublado"},
-        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "risk": 40.0, "weather": "Normal"},
-        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "risk": 32.0, "weather": "Lluvias Fuertes"},
-        {"country": "USA", "name": "Texas", "lat": 31.9, "lon": -99.9, "risk": 82.0, "weather": "Mucho Sol"},
-        {"country": "Brasil", "name": "Mato Grosso", "lat": -12.6, "lon": -55.4, "risk": 89.0, "weather": "Mucho Sol"},
-        {"country": "Australia", "name": "Queensland", "lat": -20.9, "lon": 142.7, "risk": 94.0, "weather": "Mucho Sol"}
+        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "temp": 38.0, "hum": 15.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "temp": 35.0, "hum": 20.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Coahuila", "lat": 27.3, "lon": -101.7, "temp": 33.0, "hum": 25.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "temp": 32.0, "hum": 45.0, "weather": "Normal"},
+        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "temp": 28.0, "hum": 50.0, "weather": "Nublado"},
+        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "temp": 30.0, "hum": 85.0, "weather": "Lluvias Fuertes"},
+        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "temp": 26.0, "hum": 90.0, "weather": "Tormenta Eléctrica"},
+        {"country": "USA", "name": "Texas", "lat": 31.9, "lon": -99.9, "temp": 34.0, "hum": 30.0, "weather": "Mucho Sol"},
+        {"country": "Brasil", "name": "Mato Grosso", "lat": -12.6, "lon": -55.4, "temp": 31.0, "hum": 70.0, "weather": "Normal"},
+        {"country": "Australia", "name": "Queensland", "lat": -20.9, "lon": 142.7, "temp": 36.0, "hum": 10.0, "weather": "Mucho Sol"}
     ]
     
-    # Aplicar fluctuación dinámica
+    # Aplicar fluctuación dinámica y calcular ITH inicial
     for item in base:
-        # Variación de +/- 5% según el tiempo
-        variation = random.uniform(-5.0, 8.0)
-        item['risk'] = max(0, min(100, item['risk'] + variation))
+        item['temp'] += random.uniform(-2, 3)
+        item['hum'] = max(5, min(100, item['hum'] + random.uniform(-5, 5)))
+        item['ith'] = calculate_ith(item['temp'], item['hum'])
         
-        # Cambiar clima dinámicamente según el riesgo actual
-        if item['risk'] > 85:
-            item['weather'] = "Mucho Sol"
-        elif item['risk'] > 70:
-            item['weather'] = random.choice(["Mucho Sol", "Viento Fuerte", "Normal"])
-        elif item['risk'] > 50:
-            item['weather'] = random.choice(["Nublado", "Normal", "Lluvias Fuertes"])
-        elif item['risk'] < 35:
-            item['weather'] = random.choice(["Lluvias Fuertes", "Tormenta Eléctrica"])
+        # Ajustar clima según ITH/Humedad
+        if item['hum'] > 85: item['weather'] = "Lluvias Fuertes"
+        elif item['temp'] > 35: item['weather'] = "Mucho Sol"
 
     return pd.DataFrame(base).sort_values("name")
 
@@ -199,9 +196,17 @@ with col_side:
     state_choice = st.selectbox("Estado", states, index=states.index(st.session_state.selected_state))
     st.session_state.selected_state = state_choice
 
-    data = df[df['name'] == st.session_state.selected_state].iloc[0]
-    risk = data['risk']
-    weather = data['weather']
+    # Cargar datos base del estado
+    state_data = df[df['name'] == st.session_state.selected_state].iloc[0]
+    
+    # SIMULACIÓN DE SENSORES EN TIEMPO REAL
+    st.markdown("<p style='font-size:0.7rem; color:#94a3b8; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px;'>Simulador de Sensores IOT</p>", unsafe_allow_html=True)
+    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, float(state_data['temp']), step=0.5)
+    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, float(state_data['hum']), step=1.0)
+    
+    # Cálculo ITH dinámico basado en sliders
+    ith = calculate_ith(sim_temp, sim_hum)
+    weather = state_data['weather']
     
     weather_icons = {
         "Mucho Sol": "☀️",
@@ -213,40 +218,50 @@ with col_side:
     }
     w_icon = weather_icons.get(weather, "🌡️")
 
-    color = "#ff4b4b" if risk > 85 else ("#E8B547" if risk > 50 else "#4caf50")
-    status = "PELIGRO" if weather == "Tormenta Eléctrica" else ("CRÍTICO" if risk > 85 else ("ALERTA" if risk > 50 or weather == "Lluvias Fuertes" else "ÓPTIMO"))
+    # Lógica de Color y Estado basada en ITH Científico
+    if ith >= 89:
+        color = "#ff4b4b" # Rojo Emergencia
+        status = "EMERGENCIA"
+        protocol = "🆘 <b style='color:#ff4b4b'>CRÍTICO - ITH EXTREMO</b>: Riesgo inminente de muerte. Activar aspersores continuos, ventilación máxima y suministro de agua helada. Suspender todo movimiento de ganado."
+    elif ith >= 79:
+        color = "#ff9800" # Naranja Peligro
+        status = "PELIGRO"
+        protocol = "🚨 <b style='color:#ff9800'>PELIGRO DETECTADO</b>: Estrés térmico severo. Reducir densidad en corrales, asegurar sombra total y activar protocolos de refrescamiento por pulsos."
+    elif ith >= 72:
+        color = "#E8B547" # Amarillo Alerta
+        status = "ALERTA"
+        protocol = "⚠️ <b style='color:#E8B547'>AVISO PREVENTIVO</b>: Inicio de estrés térmico. Monitorear frecuencia respiratoria y asegurar disponibilidad de agua fresca y limpia."
+    else:
+        color = "#4caf50" # Verde Óptimo
+        status = "ÓPTIMO"
+        protocol = "✅ <b style='color:#4caf50'>CONFORT TÉRMICO</b>: El hato se encuentra en su zona de bienestar. Condiciones ideales para máxima productividad de leche y carne."
+
+    # Si hay climas extremos, el protocolo se sobrepone
+    if weather == "Tormenta Eléctrica":
+        status = "PELIGRO"
+        color = "#ff4b4b"
+        protocol = "⛈️ <b style='color:#ff4b4b'>PELIGRO ELÉCTRICO</b>: Tormenta detectada. <b>PROHIBIDO</b> el pastoreo en áreas abiertas. Resguardar al hato inmediatamente."
 
     st.markdown(f"""
 <div class="sidebar-section" style="border-top: 4px solid {color}; padding: 15px;">
 <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0px;">
-<p style="font-size:0.7rem; color:#94a3b8; margin:0; text-transform: uppercase;">ESTADO ACTUAL: <b style="color:{color}">{status}</b></p>
+<p style="font-size:0.7rem; color:#94a3b8; margin:0; text-transform: uppercase;">ESTADO: <b style="color:{color}">{status}</b></p>
 <div style="text-align: right;">
 <span style="font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));" title="{weather}">{w_icon}</span>
 <p style="font-size: 0.6rem; color: #94a3b8; margin: 0; font-weight: 600;">{weather}</p>
 </div>
 </div>
 <div style="text-align: center; margin-top: -15px;">
-<p style="font-size:1.2rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
-<p style="font-size:3.5rem; font-weight:800; color:#fff; margin:0; line-height: 1;">{risk:.1f}%</p>
-<p style="font-size:0.7rem; color:#94a3b8; margin:5px 0 0 0; text-transform: uppercase; letter-spacing: 2px;">RIESGO TÉRMICO</p>
+<p style="font-size:1.2rem; font-weight:700; margin:0; color: #E8B547;">{state_data['name']}</p>
+<p style="font-size:3.5rem; font-weight:800; color:#fff; margin:0; line-height: 1;">{ith:.1f}</p>
+<p style="font-size:0.7rem; color:#94a3b8; margin:5px 0 0 0; text-transform: uppercase; letter-spacing: 2px;">ÍNDICE ITH (ESTRÉS)</p>
+</div>
+<div style="display: flex; justify-content: space-around; margin-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
+    <div style="text-align: center;"><p style="margin:0; font-size:0.6rem; color:#94a3b8;">TEMP</p><p style="margin:0; font-size:0.8rem; font-weight:700;">{sim_temp}°C</p></div>
+    <div style="text-align: center;"><p style="margin:0; font-size:0.6rem; color:#94a3b8;">HUM</p><p style="margin:0; font-size:0.8rem; font-weight:700;">{sim_hum}%</p></div>
 </div>
 </div>
 """, unsafe_allow_html=True)
-
-    if weather == "Tormenta Eléctrica":
-        protocol = "⛈️ <b style='color:#ff4b4b'>PELIGRO</b>: Tormenta eléctrica activa. <b>PROHIBIDO</b> el pastoreo en áreas abiertas. Resguardar al hato en establos protegidos por riesgo de rayos."
-    elif weather == "Lluvias Fuertes":
-        protocol = "🌧️ <b style='color:#E8B547'>AVISO</b>: Lluvias intensas. Riesgo de lodo y estrés por humedad. Se recomienda resguardar en áreas cubiertas y monitorear salud podal."
-    elif risk > 85:
-        protocol = "🚨 <b style='color:#ff4b4b'>ALERTA CRÍTICA</b>: Estrés térmico extremo detectado. Se requiere activar aspersores cada 15 min y asegurar agua a <20°C inmediatamente."
-    elif risk > 65:
-        protocol = "⚠️ <b style='color:#E8B547'>AVISO PREVENTIVO</b>: Índice térmico elevado. Es imperativo garantizar sombra total y ventilación para el hato."
-    elif weather == "Viento Fuerte":
-        protocol = "🌬️ <b style='color:#3498DB'>AVISO POR VIENTO</b>: Vientos fuertes detectados. Asegurar estructuras ligeras y monitorear posible irritación ocular en el hato."
-    elif risk > 40:
-        protocol = "⚖️ <b style='color:#3498DB'>MODERADO</b>: Condiciones ambientales estables. Mantener monitoreo preventivo de hidratación."
-    else:
-        protocol = "✅ <b style='color:#4caf50'>ESTADO ÓPTIMO</b>: Condiciones ideales para la producción. Autorizado pastoreo intensivo sin restricciones."
 
     st.markdown(f"""
         <div class="ai-protocol-card">
@@ -265,9 +280,9 @@ with col_map:
     fig.add_trace(go.Scattergeo(
         lon = df['lon'], lat = df['lat'], text = df['name'],
         mode = 'markers+text', textposition = 'top center', name = "",
-        marker = dict(size = 14, color = df['risk'], colorscale = [[0, '#4caf50'], [0.5, '#E8B547'], [1, '#ff4b4b']], line = dict(width=1, color='white'), opacity = 0.9),
-        showlegend = False, customdata = df[['name', 'weather', 'risk']],
-        hovertemplate = "<b>%{customdata[0]}</b><br>Clima: %{customdata[1]}<br>Riesgo: %{customdata[2]}%<extra></extra>"
+        marker = dict(size = 14, color = df['ith'], colorscale = [[0, '#4caf50'], [0.4, '#E8B547'], [0.7, '#ff9800'], [1, '#ff4b4b']], line = dict(width=1, color='white'), opacity = 0.9),
+        showlegend = False, customdata = df[['name', 'weather', 'ith', 'temp', 'hum']],
+        hovertemplate = "<b>%{customdata[0]}</b><br>ITH: %{customdata[2]:.1f}<br>Temp: %{customdata[3]}°C<br>Hum: %{customdata[4]}%<extra></extra>"
     ))
 
     fig.add_trace(go.Scattergeo(
