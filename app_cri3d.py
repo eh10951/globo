@@ -199,11 +199,26 @@ with col_side:
     # Cargar datos base del estado
     data = df[df['name'] == st.session_state.selected_state].iloc[0]
     
+    # Gestión de estado de simulación
+    if 'last_state' not in st.session_state or st.session_state.last_state != st.session_state.selected_state:
+        st.session_state.sim_temp = float(data['temp'])
+        st.session_state.sim_hum = float(data['hum'])
+        st.session_state.last_state = st.session_state.selected_state
+
     # SIMULADOR DE ESCENARIOS PREVENTIVOS (WHAT-IF)
     st.markdown("<p style='font-size:0.7rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
-    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, float(data['temp']), step=0.5)
-    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, float(data['hum']), step=1.0)
     
+    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, st.session_state.sim_temp, step=0.5, key="temp_slider")
+    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, st.session_state.sim_hum, step=1.0, key="hum_slider")
+    
+    st.session_state.sim_temp = sim_temp
+    st.session_state.sim_hum = sim_hum
+
+    if st.button("🔄 Restablecer a Tiempo Real", use_container_width=True):
+        st.session_state.sim_temp = float(data['temp'])
+        st.session_state.sim_hum = float(data['hum'])
+        st.rerun()
+
     # Cálculo ITH dinámico basado en sliders
     ith = calculate_ith(sim_temp, sim_hum)
     # Lógica dinámica de clima basado en simulación
@@ -284,8 +299,14 @@ with col_side:
 </div>
 </div>
 <div style="display: flex; justify-content: space-around; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
-    <div style="text-align: center;"><p style="margin:0; font-size:0.6rem; color:#94a3b8;">TEMP</p><p style="margin:0; font-size:0.8rem; font-weight:700;">{sim_temp}°C</p></div>
-    <div style="text-align: center;"><p style="margin:0; font-size:0.6rem; color:#94a3b8;">HUM</p><p style="margin:0; font-size:0.8rem; font-weight:700;">{sim_hum}%</p></div>
+    <div style="text-align: center;">
+        <p style="margin:0; font-size:0.5rem; color:#94a3b8; text-transform:uppercase;">Real</p>
+        <p style="margin:0; font-size:0.7rem; font-weight:700; color:#3498DB;">{data['temp']}°C / {data['hum']}%</p>
+    </div>
+    <div style="text-align: center;">
+        <p style="margin:0; font-size:0.5rem; color:#94a3b8; text-transform:uppercase;">Simulado</p>
+        <p style="margin:0; font-size:0.7rem; font-weight:700; color:#E8B547;">{sim_temp}°C / {sim_hum}%</p>
+    </div>
 </div>
 </div>
 """, unsafe_allow_html=True)
