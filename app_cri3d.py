@@ -241,7 +241,7 @@ with col_side:
     }
     w_icon = weather_icons.get(weather, "🌡️")
 
-    # Lógica de Color y Estado basada en ITH Científico
+    # Lógica de Color y Estado basada en ITH Científico (Jerarquía de Alerta)
     if ith >= 89:
         color = "#ff4b4b" # Rojo Emergencia
         status = "EMERGENCIA"
@@ -257,13 +257,20 @@ with col_side:
     else:
         color = "#4caf50" # Verde Óptimo
         status = "ÓPTIMO"
-        protocol = "✅ <b style='color:#4caf50'>CONFORT TÉRMICO</b>: El hato se encuentra en su zona de bienestar. Condiciones ideales para máxima productividad de leche y carne."
+        protocol = "✅ <b style='color:#4caf50'>CONFORT TÉRMICO</b>: El hato se encuentra en su zona de bienestar. Condiciones ideales para máxima productividad."
 
-    # Si hay climas extremos, el protocolo se sobrepone
+    # Intervención por clima extremo (Solo sobrepone si el ITH no es ya una Emergencia)
     if weather == "Tormenta Eléctrica":
-        status = "PELIGRO"
-        color = "#ff4b4b"
-        protocol = "⛈️ <b style='color:#ff4b4b'>PELIGRO ELÉCTRICO</b>: Tormenta detectada. <b>PROHIBIDO</b> el pastoreo en áreas abiertas. Resguardar al hato inmediatamente."
+        if ith < 89:
+            status = "RIESGO CLIMÁTICO"
+            color = "#ff4b4b"
+            protocol = f"⛈️ <b style='color:#ff4b4b'>ALERTA DE RAYOS</b>: Tormenta detectada. <b>PROHIBIDO</b> el pastoreo en áreas abiertas. Resguardar al hato inmediatamente bajo techo."
+        else:
+            # Si hay calor extremo Y tormenta
+            protocol = f"🆘 <b style='color:#ff4b4b'>RIESGO DOBLE</b>: Emergencia por Calor (ITH {ith:.1f}) + Tormenta Eléctrica. Resguardar en establos con ventilación forzada. <b>NO usar aspersores en exterior</b>."
+
+    elif weather == "Lluvias Fuertes" and ith < 79:
+        protocol = "🌧️ <b style='color:#3498DB'>LLUVIAS INTENSAS</b>: Monitorear salud podal y evitar zonas de encharcamiento para prevenir infecciones."
 
     # Cálculo del Riesgo CRI (%) basado en el ITH
     # Mapeamos el ITH (aprox 60-95) a una escala de 0-100%
