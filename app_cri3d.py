@@ -143,7 +143,8 @@ def calculate_ith(temp, rh):
     # Fórmula de Thom (1959)
     return (1.8 * temp + 32) - (0.55 - 0.55 * (rh / 100)) * (1.8 * temp - 26)
 
-# Datos maestros dinámicos
+# Datos maestros dinámicos con caché para evitar cambios aleatorios al interactuar
+@st.cache_data(ttl=1800)
 def get_data():
     seed_time = int(time.time() / 1800)
     random.seed(seed_time)
@@ -181,7 +182,10 @@ def get_data():
 
     return pd.DataFrame(base).sort_values("name")
 
-df = get_data()
+# Cargar datos base (congelados por el caché)
+df_base = get_data()
+# Crear una copia para la visualización que sí pueda ser modificada por el simulador
+df = df_base.copy()
 
 if 'selected_state' not in st.session_state: st.session_state.selected_state = "Sonora"
 if 'selected_country' not in st.session_state: st.session_state.selected_country = "México"
