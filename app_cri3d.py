@@ -194,7 +194,7 @@ if 'selected_country' not in st.session_state: st.session_state.selected_country
 col_map, col_side, col_spacer = st.columns([3.5, 1.5, 0.3], gap="large", vertical_alignment="center")
 
 with col_side:
-    st.markdown("<div class='title-panel'><p style='margin:0; font-size:0.9rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
+    st.markdown("<div class='title-panel'><p style='margin:0; font-size:1.1rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
     
     countries = df['country'].unique().tolist()
     country_choice = st.selectbox("País", countries, index=countries.index(st.session_state.selected_country))
@@ -218,7 +218,7 @@ with col_side:
         st.session_state.last_state = st.session_state.selected_state
 
     # SIMULADOR DE ESCENARIOS PREVENTIVOS (WHAT-IF)
-    st.markdown("<p style='font-size:0.7rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:0.85rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
     
     # El botón debe ir ANTES de los sliders para poder actualizar su estado sin errores
     if st.button("🔄 Restablecer a Tiempo Real", use_container_width=True):
@@ -324,13 +324,13 @@ with col_side:
 </div>
 <div style="display: flex; justify-content: space-around; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
     <div style="text-align: center;">
-        <p style="margin:0; font-size:0.5rem; color:#94a3b8; text-transform:uppercase;">Real (Actual)</p>
-        <p style="margin:0; font-size:0.75rem; font-weight:700; color:#3498DB;">{data['temp']:.1f}°C / {data['hum']:.1f}%</p>
+        <p style="margin:0; font-size:0.7rem; color:#94a3b8; text-transform:uppercase; letter-spacing: 0.5px;">Real (Actual)</p>
+        <p style="margin:0; font-size:1.1rem; font-weight:700; color:#3498DB;">{data['temp']:.1f}°C / {data['hum']:.1f}%</p>
     </div>
-    <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.05); align-self: center;"></div>
+    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.05); align-self: center;"></div>
     <div style="text-align: center;">
-        <p style="margin:0; font-size:0.5rem; color:#94a3b8; text-transform:uppercase;">Simulado</p>
-        <p style="margin:0; font-size:0.75rem; font-weight:700; color:#E8B547;">{sim_temp:.1f}°C / {sim_hum:.1f}%</p>
+        <p style="margin:0; font-size:0.7rem; color:#94a3b8; text-transform:uppercase; letter-spacing: 0.5px;">Simulado</p>
+        <p style="margin:0; font-size:1.1rem; font-weight:700; color:#E8B547;">{sim_temp:.1f}°C / {sim_hum:.1f}%</p>
     </div>
 </div>
 </div>
