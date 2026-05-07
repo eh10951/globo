@@ -149,13 +149,13 @@ def get_data():
     random.seed(seed_time)
     
     base = [
-        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "temp": 38.0, "hum": 15.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "temp": 35.0, "hum": 20.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "temp": 31.0, "hum": 15.0, "weather": "Mucho Sol"},
+        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "temp": 29.0, "hum": 20.0, "weather": "Mucho Sol"},
         {"country": "México", "name": "Coahuila", "lat": 27.3, "lon": -101.7, "temp": 33.0, "hum": 25.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "temp": 32.0, "hum": 45.0, "weather": "Normal"},
-        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "temp": 28.0, "hum": 50.0, "weather": "Nublado"},
-        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "temp": 30.0, "hum": 85.0, "weather": "Lluvias Fuertes"},
-        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "temp": 26.0, "hum": 90.0, "weather": "Tormenta Eléctrica"},
+        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "temp": 34.0, "hum": 45.0, "weather": "Normal"},
+        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "temp": 32.0, "hum": 50.0, "weather": "Nublado"},
+        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "temp": 38.0, "hum": 85.0, "weather": "Lluvias Fuertes"},
+        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "temp": 39.0, "hum": 90.0, "weather": "Tormenta Eléctrica"},
         {"country": "USA", "name": "Texas", "lat": 31.9, "lon": -99.9, "temp": 34.0, "hum": 30.0, "weather": "Mucho Sol"},
         {"country": "Brasil", "name": "Mato Grosso", "lat": -12.6, "lon": -55.4, "temp": 31.0, "hum": 70.0, "weather": "Normal"},
         {"country": "Australia", "name": "Queensland", "lat": -20.9, "lon": 142.7, "temp": 36.0, "hum": 10.0, "weather": "Mucho Sol"}
