@@ -227,6 +227,13 @@ with col_side:
 
     # Cálculo ITH dinámico basado en sliders
     ith = calculate_ith(sim_temp, sim_hum)
+    
+    # ACTUALIZAR EL DATAFRAME GLOBAL CON LOS DATOS SIMULADOS
+    # Esto permite que el punto en el mapa cambie de color en tiempo real
+    df.loc[df['name'] == st.session_state.selected_state, 'ith'] = ith
+    df.loc[df['name'] == st.session_state.selected_state, 'temp'] = sim_temp
+    df.loc[df['name'] == st.session_state.selected_state, 'hum'] = sim_hum
+    
     # Lógica dinámica de clima basado en simulación
     if sim_hum > 85:
         weather = "Tormenta Eléctrica" if sim_temp > 30 else "Lluvias Fuertes"
