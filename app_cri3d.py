@@ -167,9 +167,17 @@ def get_data():
         item['hum'] = max(5, min(100, item['hum'] + random.uniform(-5, 5)))
         item['ith'] = calculate_ith(item['temp'], item['hum'])
         
-        # Ajustar clima según ITH/Humedad
-        if item['hum'] > 85: item['weather'] = "Lluvias Fuertes"
-        elif item['temp'] > 35: item['weather'] = "Mucho Sol"
+        # Ajustar clima inicial según ITH/Humedad (Lógica unificada)
+        if item['hum'] > 85: 
+            item['weather'] = "Tormenta Eléctrica" if item['temp'] > 30 else "Lluvias Fuertes"
+        elif item['hum'] > 65: 
+            item['weather'] = "Nublado"
+        elif item['temp'] > 36: 
+            item['weather'] = "Mucho Sol"
+        elif item['temp'] < 15: 
+            item['weather'] = "Viento Fuerte"
+        else: 
+            item['weather'] = "Normal"
 
     return pd.DataFrame(base).sort_values("name")
 
@@ -305,12 +313,13 @@ with col_side:
 </div>
 <div style="display: flex; justify-content: space-around; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
     <div style="text-align: center;">
-        <p style="margin:0; font-size:0.5rem; color:#94a3b8; text-transform:uppercase;">Real</p>
-        <p style="margin:0; font-size:0.7rem; font-weight:700; color:#3498DB;">{data['temp']}°C / {data['hum']}%</p>
+        <p style="margin:0; font-size:0.5rem; color:#94a3b8; text-transform:uppercase;">Real (Actual)</p>
+        <p style="margin:0; font-size:0.75rem; font-weight:700; color:#3498DB;">{data['temp']:.1f}°C / {data['hum']:.1f}%</p>
     </div>
+    <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.05); align-self: center;"></div>
     <div style="text-align: center;">
         <p style="margin:0; font-size:0.5rem; color:#94a3b8; text-transform:uppercase;">Simulado</p>
-        <p style="margin:0; font-size:0.7rem; font-weight:700; color:#E8B547;">{sim_temp}°C / {sim_hum}%</p>
+        <p style="margin:0; font-size:0.75rem; font-weight:700; color:#E8B547;">{sim_temp:.1f}°C / {sim_hum:.1f}%</p>
     </div>
 </div>
 </div>
