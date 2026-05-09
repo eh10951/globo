@@ -415,7 +415,8 @@ with col_map:
         scenario_label = "ZONA DE CONFORT TÉRMICO"
 
     # Ruta de la imagen y conversión a base64 para CSS
-    img_path = os.path.join("simulador", "assets", scenario_img)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    img_path = os.path.join(script_dir, "assets", scenario_img)
     try:
         img_base64 = get_base64(img_path)
         
