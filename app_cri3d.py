@@ -4,6 +4,9 @@ import plotly.graph_objects as go
 import time
 import random
 import numpy as np
+import os
+import base64
+from PIL import Image
 
 # Configuración de página
 st.set_page_config(
@@ -135,8 +138,52 @@ st.markdown("""
         .ai-protocol-card { padding: 10px !important; }
         .protocol-body { font-size: 0.7rem !important; }
     }
+    /* Scenario Viewer Styles */
+    .scenario-container {
+        position: relative;
+        width: 100%;
+        height: 600px;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(232, 181, 71, 0.3);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .scenario-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: all 0.5s ease;
+    }
+    .scenario-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 40px 30px;
+        background: linear-gradient(to top, rgba(5, 7, 10, 0.9) 0%, rgba(5, 7, 10, 0) 100%);
+        color: white;
+    }
+    .scenario-badge {
+        background: rgba(232, 181, 71, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(232, 181, 71, 0.3);
+        padding: 5px 15px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
 </style>
 """, unsafe_allow_html=True)
+
+# Función para convertir imagen a base64
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
 
 # Función para calcular ITH (Índice de Temperatura y Humedad)
 def calculate_ith(temp, rh):
@@ -347,73 +394,49 @@ with col_side:
     """, unsafe_allow_html=True)
 
 with col_map:
-    # GLOBO AZUL REAL (No negro)
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scattergeo(
-        lon = df['lon'], lat = df['lat'], text = df['name'],
-        mode = 'markers+text', textposition = 'top center', name = "",
-        marker = dict(size = 14, color = df['ith'], colorscale = [[0, '#4caf50'], [0.4, '#E8B547'], [0.7, '#ff9800'], [1, '#ff4b4b']], line = dict(width=1, color='white'), opacity = 0.9),
-        showlegend = False, customdata = df[['name', 'weather', 'ith', 'temp', 'hum']],
-        hovertemplate = "<b>%{customdata[0]}</b><br>ITH: %{customdata[2]:.1f}<br>Temp: %{customdata[3]}°C<br>Hum: %{customdata[4]}%<extra></extra>"
-    ))
+    # Selección de imagen de escenario basada en simulación
+    if weather in ["Tormenta Eléctrica", "Lluvias Fuertes"]:
+        scenario_img = "cow_storm.png"
+        scenario_label = "RIESGO CLIMÁTICO: TORMENTA"
+    elif sim_temp < 15:
+        scenario_img = "cow_cold.png"
+        scenario_label = "ESTRÉS POR FRÍO"
+    elif ith >= 89:
+        scenario_img = "cow_heat_emergency.png"
+        scenario_label = "EMERGENCIA: CALOR EXTREMO"
+    elif ith >= 79:
+        scenario_img = "cow_heat_alert.png"
+        scenario_label = "PELIGRO: ESTRÉS TÉRMICO"
+    elif ith >= 72:
+        scenario_img = "cow_heat_alert.png"
+        scenario_label = "ALERTA: INICIO DE ESTRÉS"
+    else:
+        scenario_img = "cow_optimal.png"
+        scenario_label = "ZONA DE CONFORT TÉRMICO"
 
-    fig.add_trace(go.Scattergeo(
-        lon = [data['lon']], lat = [data['lat']], mode = 'markers',
-        marker = dict(size = 40, symbol = 'circle-open', line = dict(width=3, color=color)),
-        showlegend = False, hoverinfo = 'none'
-    ))
-
-    fig.update_layout(
-        height = 700, margin = {"r":0,"t":0,"l":0,"b":0},
-        paper_bgcolor = "rgba(0,0,0,0)", plot_bgcolor = "rgba(0,0,0,0)",
-        geo = dict(
-            projection_type = "orthographic",
-            showcoastlines = True, coastlinecolor = "#3498DB",
-            showland = True, landcolor = "#1F2F45", # Azul Grisáceo elegante
-            showocean = True, oceancolor = "#121926", # Azul Profundo (no negro)
-            showcountries = True, countrycolor = "rgba(255,255,255,0.2)",
-            bgcolor = "rgba(0,0,0,0)",
-            projection_scale = 0.92, 
-            projection_rotation = dict(lon=data['lon'], lat=data['lat'], roll=0)
-        )
-    )
-
-    # Contenedor para el mapa con Sol y Luna superpuestos mediante CSS
-    map_container = st.container()
-    with map_container:
-        st.markdown("""
-            <div style="position: relative; touch-action: none;">
-                <!-- SOL PROFESIONAL (Resplandor Intenso) -->
-                <div style="
-                    position: absolute; 
-                    top: 10%; left: 8%; 
-                    width: 30px; height: 30px; 
-                    background: #fff; 
-                    border-radius: 50%; 
-                    box-shadow: 0 0 15px #fff, 0 0 40px #E8B547, 0 0 70px #E8B547;
-                    z-index: 10;
-                    pointer-events: none;
-                "></div>
-                <!-- LUNA PROFESIONAL (Ligeramente más baja que el sol) -->
-                <div style="
-                    position: absolute; 
-                    top: 22%; right: 10%; 
-                    width: 22px; height: 22px; 
-                    background: #E2E8F0; 
-                    border-radius: 50%; 
-                    box-shadow: 0 0 8px #fff, 0 0 25px rgba(148, 163, 184, 0.4); 
-                    z-index: 10;
-                    pointer-events: none;
-                "></div>
+    # Ruta de la imagen y conversión a base64 para CSS
+    img_path = os.path.join("simulador", "assets", scenario_img)
+    try:
+        img_base64 = get_base64(img_path)
+        
+        # Contenedor para el Escenario Visual con fondo dinámico
+        st.markdown(f"""
+            <div class="scenario-container" style="
+                background-image: url('data:image/png;base64,{img_base64}');
+                background-size: cover;
+                background-position: center;
+                height: 700px;
+            ">
+                <div class="scenario-overlay">
+                    <div class="scenario-badge">{scenario_label}</div>
+                    <h1 style="margin:0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;">
+                        Simulación de<br>Entorno Animal
+                    </h1>
+                    <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.8); font-size: 1.1rem; font-weight: 400;">
+                        Visualización predictiva para el estado de <b>{st.session_state.selected_state}</b>
+                    </p>
+                </div>
             </div>
         """, unsafe_allow_html=True)
-        
-        selection = st.plotly_chart(fig, use_container_width=True, on_select="rerun", config={'displayModeBar': False})
-
-    if selection and "selection" in selection and selection["selection"]["points"]:
-        clicked_name = selection["selection"]["points"][0]["text"]
-        if clicked_name != st.session_state.selected_state:
-            st.session_state.selected_state = clicked_name
-            st.session_state.selected_country = df[df['name'] == clicked_name]['country'].iloc[0]
-            st.rerun()
+    except Exception as e:
+        st.error(f"Error al cargar el escenario visual: {e}")
