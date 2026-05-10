@@ -121,8 +121,21 @@ st.markdown("""
     button[title="View fullscreen"], [data-testid="stDecoration"], .stAppToolbar, .stFullScreenFrame {
         display: none !important;
     }
-    .block-container { padding: 0.5rem 2rem !important; }
-    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem !important;}
+    .block-container { 
+        padding: 0 !important; 
+        max-width: 95% !important;
+        height: 100vh !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    #root > div:nth-child(1) > div > div > div > div > section > div {
+        padding-top: 0rem !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
     /* Ocultar scrollbar para vista limpia */
     .stApp { overflow: hidden !important; height: 100vh !important; }
     ::-webkit-scrollbar { display: none; }
