@@ -41,11 +41,30 @@ st.markdown("""
         overscroll-behavior: none !important;
     }
     .sidebar-section {
-        background: rgba(26, 31, 46, 0.4);
-        border: 1px solid rgba(232, 181, 71, 0.15);
+        background-color: #05070a !important;
+        background-image: 
+            radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.15) 10%, transparent 25%),
+            radial-gradient(ellipse at 40% 30%, rgba(255,255,255,0.12) 15%, transparent 35%),
+            radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.15) 12%, transparent 30%),
+            radial-gradient(ellipse at 20% 70%, rgba(255,255,255,0.12) 18%, transparent 40%),
+            radial-gradient(ellipse at 70% 80%, rgba(255,255,255,0.15) 20%, transparent 45%),
+            radial-gradient(ellipse at 90% 50%, rgba(255,255,255,0.12) 10%, transparent 25%) !important;
+        background-size: 180px 180px !important;
+        border: 1px solid rgba(232, 181, 71, 0.25) !important;
         border-radius: 16px;
         padding: 15px;
         margin-bottom: 10px;
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        position: relative;
+        z-index: 1;
+    }
+    .sidebar-section::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 16px;
+        z-index: -1;
     }
     .title-panel { 
         padding: 0 0 10px 0;
