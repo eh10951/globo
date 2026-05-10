@@ -145,16 +145,53 @@ st.markdown("""
     .stApp { overflow: hidden !important; height: 100vh !important; }
     ::-webkit-scrollbar { display: none; }
     
-    /* Responsividad para Móviles */
-    @media (max-width: 600px) {
-        .block-container { padding: 0.5rem 0.5rem !important; }
-        .sidebar-section { padding: 10px !important; margin-bottom: 5px !important; }
-        .sidebar-section p { font-size: 0.6rem !important; }
-        .sidebar-section h3 { font-size: 1rem !important; }
-        .sidebar-section span { font-size: 2rem !important; }
-        .title-panel p { font-size: 0.7rem !important; letter-spacing: 1px !important; }
-        .ai-protocol-card { padding: 10px !important; }
-        .protocol-body { font-size: 0.7rem !important; }
+    /* Responsive Design - Full Screen Optimization */
+    @media (max-width: 1200px) {
+        [data-testid="stAppViewContainer"] {
+            height: auto !important;
+            min-height: 100vh;
+            overflow: auto !important;
+            padding: 20px 0;
+        }
+        .block-container {
+            max-width: 100% !important;
+            padding: 10px !important;
+        }
+        .scenario-container {
+            height: 450px !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .scenario-container {
+            height: 350px !important;
+            border-radius: 16px;
+        }
+        .scenario-overlay h1 {
+            font-size: 1.8rem !important;
+        }
+        .scenario-overlay p {
+            font-size: 0.9rem !important;
+        }
+        .scenario-badge {
+            font-size: 0.6rem !important;
+            padding: 3px 10px;
+        }
+        [data-testid="stMetricValue"] {
+            font-size: 1.8rem !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .scenario-container {
+            height: 300px !important;
+        }
+        .scenario-overlay {
+            padding: 20px 15px !important;
+        }
+        .scenario-overlay h1 {
+            font-size: 1.5rem !important;
+        }
     }
     /* Scenario Viewer Styles */
     .scenario-container {
