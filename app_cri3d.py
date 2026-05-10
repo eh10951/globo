@@ -8,6 +8,16 @@ import os
 import base64
 from PIL import Image
 
+# --- FUNCIONES DE APOYO ---
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def calculate_ith(temp, rh):
+    # Fórmula de Thom (1959)
+    return (1.8 * temp + 32) - (0.55 - 0.55 * (rh / 100)) * (1.8 * temp - 26)
+
 # Configuración de página
 st.set_page_config(
     page_title="CRI 3D Intelligence Dashboard",
@@ -217,18 +227,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-# Función para convertir imagen a base64
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-# Función para calcular ITH (Índice de Temperatura y Humedad)
-def calculate_ith(temp, rh):
-    # Fórmula de Thom (1959)
-    return (1.8 * temp + 32) - (0.55 - 0.55 * (rh / 100)) * (1.8 * temp - 26)
-
 # Datos maestros dinámicos con caché para evitar cambios aleatorios al interactuar
 @st.cache_data(ttl=1800)
 def get_data():
@@ -290,6 +288,12 @@ with col_side:
         st.session_state.temp_slider = float(data['temp'])
         st.session_state.hum_slider = float(data['hum'])
         st.session_state.last_state = st.session_state.selected_state
+
+    # SIMULADOR DE ESCENARIOS PREVENTIVOS (WHAT-IF)
+    st.markdown("<p style='font-size:0.85rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
+    
+    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, key="temp_slider", step=0.5)
+    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, key="hum_slider", step=1.0)
 
     # Cálculo ITH dinámico basado en sliders (Científico)
     ith = calculate_ith(sim_temp, sim_hum)
