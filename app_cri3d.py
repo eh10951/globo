@@ -377,10 +377,10 @@ with col_side:
 </div>
 </div>
 <div style="text-align: center; margin-top: -15px;">
-<p style="font-size:1.1rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
+<p style="font-size:1.1rem; font-weight:700; margin:0; color: #FFFFFF;">{data['name']}</p>
 <div style="display: flex; justify-content: center; align-items: baseline; gap: 10px; margin-top: 5px;">
     <div style="text-align: center;">
-        <p style="font-size:3.5rem; font-weight:800; color:{color}; margin:0; line-height: 1;">{cri_risk:.0f}%</p>
+        <p style="font-size:3.5rem; font-weight:800; color: #FFFFFF; margin:0; line-height: 1;">{cri_risk:.0f}%</p>
         <p style="font-size:0.6rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">RIESGO CRI</p>
     </div>
 </div>
@@ -388,7 +388,7 @@ with col_side:
 <div style="display: flex; justify-content: center; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
     <div style="text-align: center;">
         <p style="margin:0; font-size:0.75rem; color:#94a3b8; text-transform:uppercase; letter-spacing: 1px;">DATOS SIMULADOS</p>
-        <p style="margin:0; font-size:1.4rem; font-weight:700; color:#E8B547;">{sim_temp:.1f}°C / {sim_hum:.1f}%</p>
+        <p style="margin:0; font-size:1.4rem; font-weight:700; color:#FFFFFF;">{sim_temp:.1f}°C / {sim_hum:.1f}%</p>
     </div>
 </div>
 </div>
