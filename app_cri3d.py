@@ -243,19 +243,7 @@ col_map, col_side, col_spacer = st.columns([3.5, 1.5, 0.3], gap="large", vertica
 with col_side:
     st.markdown("<div class='title-panel'><p style='margin:0; font-size:1.1rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
     
-    countries = df['country'].unique().tolist()
-    country_choice = st.selectbox("País", countries, index=countries.index(st.session_state.selected_country))
-    
-    if country_choice != st.session_state.selected_country:
-        st.session_state.selected_country = country_choice
-        st.session_state.selected_state = df[df['country'] == country_choice]['name'].iloc[0]
-        st.rerun()
-
-    states = df[df['country'] == st.session_state.selected_country]['name'].tolist()
-    state_choice = st.selectbox("Estado", states, index=states.index(st.session_state.selected_state))
-    st.session_state.selected_state = state_choice
-
-    # Cargar datos base del estado
+    # Gestión de estado de simulación
     data = df[df['name'] == st.session_state.selected_state].iloc[0]
     
     # Gestión de estado de simulación
