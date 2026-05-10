@@ -8,16 +8,6 @@ import os
 import base64
 from PIL import Image
 
-# --- FUNCIONES DE APOYO ---
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-def calculate_ith(temp, rh):
-    # Fórmula de Thom (1959)
-    return (1.8 * temp + 32) - (0.55 - 0.55 * (rh / 100)) * (1.8 * temp - 26)
-
 # Configuración de página
 st.set_page_config(
     page_title="CRI 3D Intelligence Dashboard",
@@ -32,7 +22,15 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
     .main, .stApp { 
         background-color: #05070a !important;
-        background-image: radial-gradient(circle at 50% 50%, #111827 0%, #05070a 100%) !important;
+        background-image: 
+            radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.07) 12%, transparent 25%),
+            radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.05) 18%, transparent 35%),
+            radial-gradient(ellipse at 60% 20%, rgba(255,255,255,0.07) 15%, transparent 30%),
+            radial-gradient(ellipse at 85% 45%, rgba(255,255,255,0.05) 20%, transparent 45%),
+            radial-gradient(ellipse at 15% 75%, rgba(255,255,255,0.07) 15%, transparent 35%),
+            radial-gradient(ellipse at 50% 85%, rgba(255,255,255,0.05) 25%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.07) 18%, transparent 40%) !important;
+        background-size: 400px 400px !important;
         background-attachment: fixed !important;
         color: #f8fafc; 
         font-family: 'Outfit', sans-serif; 
@@ -41,30 +39,11 @@ st.markdown("""
         overscroll-behavior: none !important;
     }
     .sidebar-section {
-        background-color: #05070a !important;
-        background-image: 
-            radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.15) 10%, transparent 25%),
-            radial-gradient(ellipse at 40% 30%, rgba(255,255,255,0.12) 15%, transparent 35%),
-            radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.15) 12%, transparent 30%),
-            radial-gradient(ellipse at 20% 70%, rgba(255,255,255,0.12) 18%, transparent 40%),
-            radial-gradient(ellipse at 70% 80%, rgba(255,255,255,0.15) 20%, transparent 45%),
-            radial-gradient(ellipse at 90% 50%, rgba(255,255,255,0.12) 10%, transparent 25%) !important;
-        background-size: 180px 180px !important;
-        border: 1px solid rgba(232, 181, 71, 0.25) !important;
+        background: rgba(26, 31, 46, 0.4);
+        border: 1px solid rgba(232, 181, 71, 0.15);
         border-radius: 16px;
         padding: 15px;
         margin-bottom: 10px;
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-        position: relative;
-        z-index: 1;
-    }
-    .sidebar-section::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 16px;
-        z-index: -1;
     }
     .title-panel { 
         padding: 0 0 10px 0;
@@ -246,6 +225,18 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
+# Función para convertir imagen a base64
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+# Función para calcular ITH (Índice de Temperatura y Humedad)
+def calculate_ith(temp, rh):
+    # Fórmula de Thom (1959)
+    return (1.8 * temp + 32) - (0.55 - 0.55 * (rh / 100)) * (1.8 * temp - 26)
+
 # Datos maestros dinámicos con caché para evitar cambios aleatorios al interactuar
 @st.cache_data(ttl=1800)
 def get_data():
