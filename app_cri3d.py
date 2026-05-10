@@ -1,102 +1,120 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import plotly.graph_objects as go
-import time
-import random
 import numpy as np
-import os
 import base64
-from PIL import Image
+import os
+from datetime import datetime
 
-# Configuración de página
+# ==========================================
+# CONFIGURACIÓN DE PÁGINA
+# ==========================================
 st.set_page_config(
-    page_title="CRI 3D Intelligence Dashboard",
-    page_icon="🌍",
+    page_title="OITIZ - Inteligencia Ganadera",
+    page_icon="🐄",
     layout="wide",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="collapsed"
 )
 
-# Estilos CSS - Estética Escudo Ganadero
+# Estilos CSS Premium (Minimalismo Absoluto)
 st.markdown("""
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-    .main, .stApp { 
-        background-color: #05070a !important;
-        background-image: radial-gradient(circle at 50% 50%, #111827 0%, #05070a 100%) !important;
-        background-attachment: fixed !important;
-        color: #f8fafc; 
-        font-family: 'Outfit', sans-serif; 
-        overflow: hidden !important;
-        touch-action: none !important;
-        overscroll-behavior: none !important;
+    <style>
+    /* Reset total de márgenes y paddings */
+    .main .block-container {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-width: 100% !important;
     }
+    
+    /* Tema Oscuro Elegante */
+    .stApp {
+        background-color: #05070a;
+        color: #ffffff;
+    }
+
+    /* Ocultar elementos de Streamlit */
+    #MainMenu, footer, header {visibility: hidden;}
+    .stDeployButton {display:none;}
+    [data-testid="stToolbar"] {visibility: hidden !important;}
+    
+    /* Panel Lateral (Visión Inteligente) */
     .sidebar-section {
-        background: rgba(26, 31, 46, 0.4);
-        border: 1px solid rgba(232, 181, 71, 0.15);
-        border-radius: 16px;
-        padding: 15px;
-        margin-bottom: 10px;
+        background: rgba(17, 21, 30, 0.7);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        margin-bottom: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .title-panel { 
-        padding: 0 0 10px 0;
-        margin-bottom: 15px;
-        border-bottom: 1px solid rgba(232, 181, 71, 0.2);
-        text-align: center;
-    }
+    
+    /* Tarjetas de Protocolo AI */
     .ai-protocol-card {
-        background: linear-gradient(135deg, rgba(232, 181, 71, 0.08) 0%, rgba(0,0,0,0.2) 100%);
-        border-radius: 16px;
-        padding: 18px;
+        background: linear-gradient(145deg, rgba(232, 181, 71, 0.05) 0%, rgba(13, 17, 23, 0.8) 100%);
+        border-left: 3px solid #E8B547;
+        padding: 15px;
+        border-radius: 12px;
         margin-top: 15px;
-        border: 1px solid rgba(232, 181, 71, 0.2);
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    }
-    .ai-protocol-card::before {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; width: 4px; height: 100%;
-        background: #E8B547;
     }
     .protocol-header {
-        color: #E8B547;
-        font-weight: 800;
         font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin-bottom: 12px;
+        font-weight: 900;
+        letter-spacing: 1.5px;
+        color: #E8B547;
+        margin-bottom: 8px;
         display: flex;
         align-items: center;
         gap: 8px;
     }
-    .protocol-body { 
-        font-size: 0.85rem; 
-        line-height: 1.5; 
-        color: #e2e8f0; 
-        font-weight: 400;
-    }
     .ai-badge {
-        background: rgba(232, 181, 71, 0.15);
-        color: #E8B547;
-        padding: 2px 8px;
+        background: #E8B547;
+        color: black;
+        padding: 2px 6px;
         border-radius: 4px;
         font-size: 0.6rem;
-        font-weight: 900;
-        border: 1px solid rgba(232, 181, 71, 0.3);
     }
-    #MainMenu {visibility: hidden;}
-    footer {display: none !important; visibility: hidden !important;}
-    header {display: none !important; visibility: hidden !important;}
-    #root > div:nth-child(1) > div > div > div > div > section > div {padding-top: 0rem;}
-    .stAppDeployButton {display: none !important;}
-    /* Ocultar elementos de control de Streamlit y marca de agua */
-    [data-testid="stStatusWidget"], [data-testid="stFooter"], [data-testid="stHeader"], .st-emotion-cache-1vt4y6f, .viewerBadge_container__1QSob, .stToolbar, .stStatusWidget {
-        display: none !important;
-        visibility: hidden !important;
-        height: 0 !important;
-        width: 0 !important;
-        opacity: 0 !important;
+    .protocol-body {
+        font-size: 0.8rem;
+        color: #cbd5e0;
+        line-height: 1.4;
+    }
+
+    /* Contenedor del Simulador (Mapa 3D) */
+    .scenario-container {
+        position: relative;
+        width: 100%;
+        height: 650px;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 40px;
+    }
+    .scenario-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(0deg, rgba(5,7,10,0.9) 0%, rgba(5,7,10,0) 50%);
+    }
+    .scenario-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    /* Sliders Estilizados */
+    .stSlider > div [data-baseweb="slider"] {
+        height: 6px;
+    }
+    .stSlider > div [data-baseweb="slider"] > div {
+        background-color: #E8B547;
+    }
+    
+    /* Disable click pointer events on background */
+    .stApp > div {
         pointer-events: none !important;
         background: transparent !important;
     }
@@ -149,223 +167,143 @@ st.markdown("""
     @media (max-width: 768px) {
         .scenario-container {
             height: 350px !important;
-            border-radius: 16px;
+            padding: 20px !important;
         }
-        .scenario-overlay h1 {
-            font-size: 1.8rem !important;
-        }
-        .scenario-overlay p {
-            font-size: 0.9rem !important;
-        }
-        .scenario-badge {
-            font-size: 0.6rem !important;
-            padding: 3px 10px;
-        }
-        [data-testid="stMetricValue"] {
+        .scenario-content h1 {
             font-size: 1.8rem !important;
         }
     }
-
-    @media (max-width: 480px) {
-        .scenario-container {
-            height: 300px !important;
-        }
-        .scenario-overlay {
-            padding: 20px 15px !important;
-        }
-        .scenario-overlay h1 {
-            font-size: 1.5rem !important;
-        }
-    }
-    /* Scenario Viewer Styles */
-    .scenario-container {
-        position: relative;
-        width: 100%;
-        height: 600px;
-        border-radius: 24px;
-        overflow: hidden;
-        border: 1px solid rgba(232, 181, 71, 0.3);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    }
-    .scenario-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: all 0.5s ease;
-    }
-    .scenario-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 40px 30px;
-        background: linear-gradient(to top, rgba(5, 7, 10, 0.9) 0%, rgba(5, 7, 10, 0) 100%);
-        color: white;
-    }
-    .scenario-badge {
-        background: rgba(232, 181, 71, 0.2);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(232, 181, 71, 0.3);
-        padding: 5px 15px;
-        border-radius: 30px;
-        font-size: 0.8rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        display: inline-block;
-        margin-bottom: 10px;
-    }
-</style>
+    </style>
 """, unsafe_allow_html=True)
 
-# Función para convertir imagen a base64
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+# ==========================================
+# LÓGICA DE DATOS
+# ==========================================
 
-# Función para calcular ITH (Índice de Temperatura y Humedad)
-def calculate_ith(temp, rh):
-    # Fórmula de Thom (1959)
-    return (1.8 * temp + 32) - (0.55 - 0.55 * (rh / 100)) * (1.8 * temp - 26)
+def calculate_ith(temp, hum):
+    """Cálculo del Índice de Temperatura y Humedad (ITH)"""
+    return (1.8 * temp + 32) - (0.55 - 0.0055 * hum) * (1.8 * temp - 26)
 
-# Datos maestros dinámicos con caché para evitar cambios aleatorios al interactuar
-@st.cache_data(ttl=1800)
-def get_data():
-    seed_time = int(time.time() / 1800)
-    random.seed(seed_time)
-    
-    base = [
-        {"country": "México", "name": "Sonora", "lat": 29.3, "lon": -110.3, "temp": 31.0, "hum": 15.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Chihuahua", "lat": 28.6, "lon": -106.1, "temp": 29.0, "hum": 20.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Coahuila", "lat": 27.3, "lon": -101.7, "temp": 33.0, "hum": 25.0, "weather": "Mucho Sol"},
-        {"country": "México", "name": "Nuevo León", "lat": 25.7, "lon": -100.3, "temp": 34.0, "hum": 45.0, "weather": "Normal"},
-        {"country": "México", "name": "Jalisco", "lat": 20.7, "lon": -103.3, "temp": 32.0, "hum": 50.0, "weather": "Nublado"},
-        {"country": "México", "name": "Veracruz", "lat": 19.2, "lon": -96.1, "temp": 38.0, "hum": 85.0, "weather": "Lluvias Fuertes"},
-        {"country": "México", "name": "Chiapas", "lat": 16.8, "lon": -93.1, "temp": 39.0, "hum": 90.0, "weather": "Tormenta Eléctrica"},
-        {"country": "USA", "name": "Texas", "lat": 31.9, "lon": -99.9, "temp": 34.0, "hum": 30.0, "weather": "Mucho Sol"},
-        {"country": "Brasil", "name": "Mato Grosso", "lat": -12.6, "lon": -55.4, "temp": 31.0, "hum": 70.0, "weather": "Normal"},
-        {"country": "Australia", "name": "Queensland", "lat": -20.9, "lon": 142.7, "temp": 36.0, "hum": 10.0, "weather": "Mucho Sol"}
-    ]
-    
-    # Aplicar fluctuación dinámica y calcular ITH inicial
-    for item in base:
-        item['temp'] += random.uniform(-2, 3)
-        item['hum'] = max(5, min(100, item['hum'] + random.uniform(-5, 5)))
-        item['ith'] = calculate_ith(item['temp'], item['hum'])
-        
-        # Ajustar clima inicial según ITH/Humedad (Lógica unificada)
-        if item['hum'] > 85: 
-            item['weather'] = "Tormenta Eléctrica" if item['temp'] > 30 else "Lluvias Fuertes"
-        elif item['hum'] > 65: 
-            item['weather'] = "Nublado"
-        elif item['temp'] > 36: 
-            item['weather'] = "Mucho Sol"
-        elif item['temp'] < 15: 
-            item['weather'] = "Viento Fuerte"
-        else: 
-            item['weather'] = "Normal"
+def get_image_base64(path):
+    try:
+        with open(path, "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode()
+    except:
+        return ""
 
-    return pd.DataFrame(base).sort_values("name")
+# Datos ficticios de estados para la simulación
+data_states = {
+    "Sonora": {"temp": 32, "hum": 15, "weather": "Despejado"},
+    "Jalisco": {"temp": 24, "hum": 60, "weather": "Nublado"},
+    "Chihuahua": {"temp": 38, "hum": 10, "weather": "Mucho Sol"},
+    "Veracruz": {"temp": 30, "hum": 85, "weather": "Lluvioso"},
+}
 
-# Cargar datos base (congelados por el caché)
-df_base = get_data()
-# Crear una copia para la visualización que sí pueda ser modificada por el simulador
-df = df_base.copy()
+df = pd.DataFrame([
+    {"name": k, "temp": v["temp"], "hum": v["hum"], "weather": v["weather"], 
+     "ith": calculate_ith(v["temp"], v["hum"])} 
+    for k, v in data_states.items()
+])
 
-if 'selected_state' not in st.session_state: st.session_state.selected_state = "Sonora"
-if 'selected_country' not in st.session_state: st.session_state.selected_country = "México"
+# ==========================================
+# INTERFAZ PRINCIPAL
+# ==========================================
 
-# UI con centrado vertical absoluto y balance de márgenes
-col_map, col_side, col_spacer = st.columns([3.5, 1.5, 0.3], gap="large", vertical_alignment="center")
+col_map, col_side = st.columns([0.65, 0.35])
 
 with col_side:
-    # Gestión de estado de simulación
+    st.markdown("<p style='font-size:0.8rem; font-weight:900; letter-spacing:1px; color:#E8B547; margin-bottom:10px;'>SIMULADOR DE ESCENARIOS (WHAT-IF)</p>", unsafe_allow_html=True)
     
-    # Gestión de estado de simulación
-    data = df[df['name'] == st.session_state.selected_state].iloc[0]
+    # Selector de Estado
+    if 'selected_state' not in st.session_state:
+        st.session_state.selected_state = "Sonora"
     
-    # Gestión de estado de simulación
-    if 'temp_slider' not in st.session_state or st.session_state.last_state != st.session_state.selected_state:
-        st.session_state.temp_slider = float(data['temp'])
-        st.session_state.hum_slider = float(data['hum'])
-        st.session_state.last_state = st.session_state.selected_state
-
-    # SIMULADOR DE ESCENARIOS PREVENTIVOS (WHAT-IF)
-    st.markdown("<p style='font-size:0.85rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
+    data = data_states[st.session_state.selected_state]
     
-    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, key="temp_slider", step=0.5)
-    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, key="hum_slider", step=1.0)
-
-    # Cálculo ITH dinámico basado en sliders
+    sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, value=float(data["temp"]), key="temp_slider", step=0.5)
+    sim_hum = st.slider("Humedad (%)", 5.0, 100.0, value=float(data["hum"]), key="hum_slider", step=1.0)
+    
+    # Cálculo ITH dinámico basado en sliders (Científico)
     ith = calculate_ith(sim_temp, sim_hum)
     
+    # Cálculo CRI (0-100%) sincronizado con ITH
+    # 72 es el umbral de alerta, 89 es emergencia.
+    if ith < 72:
+        cri_risk = (ith / 72) * 50
+    else:
+        cri_risk = 50 + ((ith - 72) / (95 - 72)) * 50
+    cri_risk = max(0, min(100, cri_risk))
+
     # ACTUALIZAR EL DATAFRAME GLOBAL CON LOS DATOS SIMULADOS
-    # Esto permite que el punto en el mapa cambie de color en tiempo real
     df.loc[df['name'] == st.session_state.selected_state, 'ith'] = ith
     df.loc[df['name'] == st.session_state.selected_state, 'temp'] = sim_temp
     df.loc[df['name'] == st.session_state.selected_state, 'hum'] = sim_hum
     
     # Lógica dinámica de clima basado en simulación
     if sim_hum > 85:
-        weather = "Tormenta Eléctrica" if sim_temp > 30 else "Lluvias Fuertes"
+        weather = "Tormenta Eléctrica" if sim_temp > 28 else "Lluvias Fuertes"
     elif sim_hum > 65:
-        weather = "Nublado"
-    elif sim_temp > 36:
-        weather = "Mucho Sol"
+        weather = "Húmedo / Nublado"
+    elif sim_temp > 38:
+        weather = "Calor Extremo"
+    elif sim_temp > 32:
+        weather = "Despejado / Cálido"
     elif sim_temp < 15:
-        weather = "Viento Fuerte"
+        weather = "Clima Frío"
     else:
-        weather = "Normal"
+        weather = "Clima Templado"
     
     weather_icons = {
-        "Mucho Sol": "☀️",
+        "Calor Extremo": "☀️",
+        "Despejado / Cálido": "🌤️",
         "Lluvias Fuertes": "🌧️",
-        "Normal": "🌤️",
-        "Nublado": "☁️",
+        "Clima Templado": "🌤️",
+        "Húmedo / Nublado": "☁️",
         "Tormenta Eléctrica": "⛈️",
-        "Viento Fuerte": "🌬️"
+        "Clima Frío": "🌬️"
     }
     w_icon = weather_icons.get(weather, "🌡️")
 
-    # Lógica de Color y Estado basada en ITH Científico (Jerarquía de Alerta)
+    # Lógica de Color, Estado y Protocolos (Inteligencia Integrada)
     if ith >= 89:
         color = "#ff4b4b" # Rojo Emergencia
         status = "EMERGENCIA"
-        protocol = "🆘 <b style='color:#ff4b4b'>CRÍTICO - ITH EXTREMO</b>: Riesgo inminente de muerte. Activar aspersores continuos, ventilación máxima y suministro de agua helada. Suspender todo movimiento de ganado."
+        protocol = "🆘 <b style='color:#ff4b4b'>CRÍTICO - ITH EXTREMO</b>: Riesgo inminente de muerte por golpe de calor. Activar aspersores continuos, ventilación máxima y agua helada."
+        scenario_img = "cow_heat_emergency.png"
+        scenario_label = "EMERGENCIA: CALOR EXTREMO"
     elif ith >= 79:
         color = "#ff9800" # Naranja Peligro
         status = "PELIGRO"
-        protocol = "🚨 <b style='color:#ff9800'>PELIGRO DETECTADO</b>: Estrés térmico severo. Reducir densidad en corrales, asegurar sombra total y activar protocolos de refrescamiento por pulsos."
+        protocol = "🚨 <b style='color:#ff9800'>PELIGRO DETECTADO</b>: Estrés térmico severo. Reducir densidad, sombra total y refrescamiento por pulsos obligatorio."
+        scenario_img = "cow_heat_alert.png"
+        scenario_label = "PELIGRO: ESTRÉS TÉRMICO"
     elif ith >= 72:
         color = "#E8B547" # Amarillo Alerta
         status = "ALERTA"
-        protocol = "⚠️ <b style='color:#E8B547'>AVISO PREVENTIVO</b>: Inicio de estrés térmico. Monitorear frecuencia respiratoria y asegurar disponibilidad de agua fresca y limpia."
+        protocol = "⚠️ <b style='color:#E8B547'>AVISO PREVENTIVO</b>: Inicio de estrés térmico. Monitorear frecuencia respiratoria y asegurar agua fresca."
+        scenario_img = "cow_heat_alert.png"
+        scenario_label = "ALERTA: INICIO DE ESTRÉS"
+    elif sim_temp < 15:
+        color = "#3498DB" # Azul Frío
+        status = "FRÍO"
+        protocol = "❄️ <b style='color:#3498DB'>ESTRÉS POR FRÍO</b>: Proteger de vientos, asegurar camas secas y aumentar aporte calórico en dieta."
+        scenario_img = "cow_cold.png"
+        scenario_label = "ALERTA: ESTRÉS POR FRÍO"
     else:
         color = "#4caf50" # Verde Óptimo
         status = "ÓPTIMO"
         protocol = "✅ <b style='color:#4caf50'>CONFORT TÉRMICO</b>: El hato se encuentra en su zona de bienestar. Condiciones ideales para máxima productividad."
+        scenario_img = "cow_optimal.png"
+        scenario_label = "ZONA DE CONFORT TÉRMICO"
 
-    # Intervención por clima extremo (Solo sobrepone si el ITH no es ya una Emergencia)
+    # Sobreescribir por Clima si es necesario
     if weather == "Tormenta Eléctrica":
+        scenario_img = "cow_storm.png"
+        scenario_label = "RIESGO: TORMENTA ELÉCTRICA"
         if ith < 89:
             status = "RIESGO CLIMÁTICO"
             color = "#ff4b4b"
-            protocol = f"⛈️ <b style='color:#ff4b4b'>ALERTA DE RAYOS</b>: Tormenta detectada. <b>PROHIBIDO</b> el pastoreo en áreas abiertas. Resguardar al hato inmediatamente bajo techo."
-        else:
-            # Si hay calor extremo Y tormenta
-            protocol = f"🆘 <b style='color:#ff4b4b'>RIESGO DOBLE</b>: Emergencia por Calor (ITH {ith:.1f}) + Tormenta Eléctrica. Resguardar en establos con ventilación forzada. <b>NO usar aspersores en exterior</b>."
-
-    elif weather == "Lluvias Fuertes" and ith < 79:
-        protocol = "🌧️ <b style='color:#3498DB'>LLUVIAS INTENSAS</b>: Monitorear salud podal y evitar zonas de encharcamiento para prevenir infecciones."
-
-    # Cálculo del Riesgo CRI (%) basado en el ITH
-    # Mapeamos el ITH (aprox 60-95) a una escala de 0-100%
-    if ith < 72:
-        cri_risk = (ith / 72) * 50
-    else:
-        cri_risk = 50 + ((ith - 72) / (95 - 72)) * 50
-    cri_risk = max(0, min(100, cri_risk))
+            protocol = "⛈️ <b style='color:#ff4b4b'>ALERTA DE RAYOS</b>: Tormenta detectada. Resguardar al hato inmediatamente bajo techo."
 
     st.markdown(f"""
 <div class="sidebar-section" style="border-top: 4px solid {color}; padding: 15px;">
@@ -377,7 +315,7 @@ with col_side:
 </div>
 </div>
 <div style="text-align: center; margin-top: -15px;">
-<p style="font-size:1.1rem; font-weight:700; margin:0; color: #FFFFFF;">{data['name']}</p>
+<p style="font-size:1.1rem; font-weight:700; margin:0; color: #FFFFFF;">{st.session_state.selected_state}</p>
 <div style="display: flex; justify-content: center; align-items: baseline; gap: 10px; margin-top: 5px;">
     <div style="text-align: center;">
         <p style="font-size:3.5rem; font-weight:800; color: #FFFFFF; margin:0; line-height: 1;">{cri_risk:.0f}%</p>
@@ -405,62 +343,23 @@ with col_side:
     """, unsafe_allow_html=True)
 
 with col_map:
-    # Selección de imagen de escenario basada en simulación
-    if weather in ["Tormenta Eléctrica", "Lluvias Fuertes"]:
-        scenario_img = "cow_storm.png"
-        scenario_label = "RIESGO CLIMÁTICO: TORMENTA"
-    elif sim_temp < 15:
-        scenario_img = "cow_cold.png"
-        scenario_label = "ESTRÉS POR FRÍO"
-    elif ith >= 89:
-        scenario_img = "cow_heat_emergency.png"
-        scenario_label = "EMERGENCIA: CALOR EXTREMO"
-    elif ith >= 79:
-        scenario_img = "cow_heat_alert.png"
-        scenario_label = "PELIGRO: ESTRÉS TÉRMICO"
-    elif ith >= 72:
-        scenario_img = "cow_heat_alert.png"
-        scenario_label = "ALERTA: INICIO DE ESTRÉS"
-    else:
-        scenario_img = "cow_optimal.png"
-        scenario_label = "ZONA DE CONFORT TÉRMICO"
+    # La imagen y el label ya fueron seleccionados en el bloque de inteligencia superior
+    # para asegurar sincronización total.
 
     # Ruta de la imagen y conversión a base64 para CSS
     script_dir = os.path.dirname(os.path.abspath(__file__))
     img_path = os.path.join(script_dir, "assets", scenario_img)
+    img_b64 = get_image_base64(img_path)
     
-    try:
-        # Verificamos si la imagen existe antes de intentar cargarla
-        if os.path.exists(img_path):
-            img_base64 = get_base64(img_path)
-            bg_style = f"background-image: url('data:image/png;base64,{img_base64}');"
-            title_text = "Visualización del<br>Entorno de la Vaca"
-            subtitle_text = f"Visualización predictiva para el estado de <b>{st.session_state.selected_state}</b>"
-        else:
-            # Fallback elegante si no se encuentran las imágenes (común en despliegue cloud sin assets)
-            bg_style = "background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);"
-            title_text = "Escenario Visual<br>No Disponible"
-            subtitle_text = "Por favor, asegúrate de subir la carpeta <b>assets</b> a tu repositorio de GitHub para habilitar las imágenes dinámicas."
-            st.info("💡 **Tip**: Se han generado imágenes locales en la carpeta `simulador/assets/`. Súbelas a tu servidor para activar la vista completa.")
-
-        # Contenedor para el Escenario Visual
-        st.markdown(f"""
-            <div class="scenario-container" style="
-                {bg_style}
-                background-size: cover;
-                background-position: center;
-                height: 700px;
-            ">
-                <div class="scenario-overlay">
-                    <div class="scenario-badge">{scenario_label}</div>
-                    <h1 style="margin:0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;">
-                        {title_text}
-                    </h1>
-                    <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.8); font-size: 1.1rem; font-weight: 400;">
-                        {subtitle_text}
-                    </p>
+    st.markdown(f"""
+        <div class="scenario-container" style="background-image: url('data:image/png;base64,{img_b64}');">
+            <div class="scenario-overlay"></div>
+            <div class="scenario-content">
+                <div style="background: rgba(232, 181, 71, 0.2); backdrop-filter: blur(5px); padding: 4px 12px; border-radius: 8px; border: 1px solid rgba(232, 181, 71, 0.3); display: inline-block; margin-bottom: 20px;">
+                    <p style="color: #E8B547; font-size: 0.7rem; font-weight: 900; margin: 0; letter-spacing: 1px;">{scenario_label}</p>
                 </div>
+                <h1 style="color: white; font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; line-height: 1.1;">Visualización del<br>Entorno de la Vaca</h1>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 0;">Visualización predictiva para el estado de {st.session_state.selected_state}</p>
             </div>
-        """, unsafe_allow_html=True)
-    except Exception as e:
-        st.error(f"Error al cargar el escenario visual: {e}")
+        </div>
+    """, unsafe_allow_html=True)
