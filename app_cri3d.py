@@ -23,11 +23,14 @@ st.markdown("""
     .main, .stApp { 
         background-color: #05070a !important;
         background-image: 
-            radial-gradient(at 0% 0%, rgba(232, 181, 71, 0.05) 0%, transparent 50%),
-            radial-gradient(at 100% 100%, rgba(17, 24, 39, 0.2) 0%, transparent 50%),
+            radial-gradient(circle at 10% 15%, rgba(255, 255, 255, 0.07) 0%, transparent 35%),
+            radial-gradient(circle at 85% 25%, rgba(255, 255, 255, 0.04) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 60%),
+            radial-gradient(circle at 20% 85%, rgba(255, 255, 255, 0.05) 0%, transparent 40%),
+            radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.06) 0%, transparent 45%),
             linear-gradient(rgba(232, 181, 71, 0.015) 1px, transparent 1px),
             linear-gradient(90deg, rgba(232, 181, 71, 0.015) 1px, transparent 1px) !important;
-        background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px !important;
+        background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 50px 50px, 50px 50px !important;
         background-attachment: fixed !important;
         color: #f8fafc; 
         font-family: 'Outfit', sans-serif; 
