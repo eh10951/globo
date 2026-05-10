@@ -187,6 +187,25 @@ st.markdown("""
             font-size: 1.5rem !important;
         }
     }
+    
+    /* Estilos para los Sliders */
+    .stSlider label {
+        font-size: 1.0rem !important;
+        font-weight: 700 !important;
+        color: #E8B547 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .stSlider [data-testid="stMarkdownContainer"] p {
+        font-size: 1.0rem !important;
+    }
+    /* Valor numérico del slider */
+    [data-testid="stSlider"] div[data-baseweb="slider"] + div {
+        font-size: 1.1rem !important;
+        font-weight: 800 !important;
+        color: #FFFFFF !important;
+    }
+    
     /* Scenario Viewer Styles */
     .scenario-container {
         position: relative;
