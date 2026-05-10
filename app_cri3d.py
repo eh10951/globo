@@ -54,20 +54,21 @@ st.markdown("""
         text-align: center;
     }
     .ai-protocol-card {
-        background: linear-gradient(135deg, rgba(232, 181, 71, 0.08) 0%, rgba(0,0,0,0.2) 100%);
-        border-radius: 16px;
-        padding: 18px;
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        border-radius: 20px;
+        padding: 22px;
         margin-top: 15px;
-        border: 1px solid rgba(232, 181, 71, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         position: relative;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
     .ai-protocol-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0; width: 4px; height: 100%;
-        background: #E8B547;
+        background: linear-gradient(to bottom, #f8fafc, rgba(248,250,252,0.2));
     }
     .protocol-header {
         color: #E8B547;
@@ -87,13 +88,13 @@ st.markdown("""
         font-weight: 400;
     }
     .ai-badge {
-        background: rgba(232, 181, 71, 0.15);
-        color: #E8B547;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 0.6rem;
-        font-weight: 900;
-        border: 1px solid rgba(232, 181, 71, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        color: #f8fafc;
+        padding: 3px 10px;
+        border-radius: 6px;
+        font-size: 0.65rem;
+        font-weight: 800;
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
     #MainMenu {visibility: hidden;}
     footer {display: none !important; visibility: hidden !important;}
@@ -192,7 +193,7 @@ st.markdown("""
     .stSlider label {
         font-size: 1.0rem !important;
         font-weight: 700 !important;
-        color: #E8B547 !important;
+        color: #FFFFFF !important;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
@@ -321,7 +322,7 @@ with col_side:
         st.session_state.last_state = st.session_state.selected_state
 
     # SIMULADOR DE ESCENARIOS PREVENTIVOS (WHAT-IF)
-    st.markdown("<p style='font-size:0.85rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:1.0rem; color:#E8B547; margin:10px 0 10px 0; text-transform: uppercase; letter-spacing:1px; font-weight:800;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
     
     sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, key="temp_slider", step=0.5)
     sim_hum = st.slider("Humedad (%)", 5.0, 100.0, key="hum_slider", step=1.0)
