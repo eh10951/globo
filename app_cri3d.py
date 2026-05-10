@@ -417,13 +417,25 @@ with col_map:
     # Ruta de la imagen y conversión a base64 para CSS
     script_dir = os.path.dirname(os.path.abspath(__file__))
     img_path = os.path.join(script_dir, "assets", scenario_img)
+    
     try:
-        img_base64 = get_base64(img_path)
-        
-        # Contenedor para el Escenario Visual con fondo dinámico
+        # Verificamos si la imagen existe antes de intentar cargarla
+        if os.path.exists(img_path):
+            img_base64 = get_base64(img_path)
+            bg_style = f"background-image: url('data:image/png;base64,{img_base64}');"
+            title_text = "Simulación de<br>Entorno Animal"
+            subtitle_text = f"Visualización predictiva para el estado de <b>{st.session_state.selected_state}</b>"
+        else:
+            # Fallback elegante si no se encuentran las imágenes (común en despliegue cloud sin assets)
+            bg_style = "background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);"
+            title_text = "Escenario Visual<br>No Disponible"
+            subtitle_text = "Por favor, asegúrate de subir la carpeta <b>assets</b> a tu repositorio de GitHub para habilitar las imágenes dinámicas."
+            st.info("💡 **Tip**: Se han generado imágenes locales en la carpeta `simulador/assets/`. Súbelas a tu servidor para activar la vista completa.")
+
+        # Contenedor para el Escenario Visual
         st.markdown(f"""
             <div class="scenario-container" style="
-                background-image: url('data:image/png;base64,{img_base64}');
+                {bg_style}
                 background-size: cover;
                 background-position: center;
                 height: 700px;
@@ -431,10 +443,10 @@ with col_map:
                 <div class="scenario-overlay">
                     <div class="scenario-badge">{scenario_label}</div>
                     <h1 style="margin:0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;">
-                        Simulación de<br>Entorno Animal
+                        {title_text}
                     </h1>
                     <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.8); font-size: 1.1rem; font-weight: 400;">
-                        Visualización predictiva para el estado de <b>{st.session_state.selected_state}</b>
+                        {subtitle_text}
                     </p>
                 </div>
             </div>
