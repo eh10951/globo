@@ -23,14 +23,11 @@ st.markdown("""
     .main, .stApp { 
         background-color: #05070a !important;
         background-image: 
-            radial-gradient(ellipse at 10% 10%, rgba(255,255,255,0.07) 12%, transparent 25%),
-            radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.05) 18%, transparent 35%),
-            radial-gradient(ellipse at 60% 20%, rgba(255,255,255,0.07) 15%, transparent 30%),
-            radial-gradient(ellipse at 85% 45%, rgba(255,255,255,0.05) 20%, transparent 45%),
-            radial-gradient(ellipse at 15% 75%, rgba(255,255,255,0.07) 15%, transparent 35%),
-            radial-gradient(ellipse at 50% 85%, rgba(255,255,255,0.05) 25%, transparent 50%),
-            radial-gradient(ellipse at 80% 80%, rgba(255,255,255,0.07) 18%, transparent 40%) !important;
-        background-size: 400px 400px !important;
+            radial-gradient(at 0% 0%, rgba(232, 181, 71, 0.05) 0%, transparent 50%),
+            radial-gradient(at 100% 100%, rgba(17, 24, 39, 0.2) 0%, transparent 50%),
+            linear-gradient(rgba(232, 181, 71, 0.015) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(232, 181, 71, 0.015) 1px, transparent 1px) !important;
+        background-size: 100% 100%, 100% 100%, 50px 50px, 50px 50px !important;
         background-attachment: fixed !important;
         color: #f8fafc; 
         font-family: 'Outfit', sans-serif; 
@@ -39,11 +36,13 @@ st.markdown("""
         overscroll-behavior: none !important;
     }
     .sidebar-section {
-        background: rgba(26, 31, 46, 0.4);
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
         border: 1px solid rgba(232, 181, 71, 0.15);
-        border-radius: 16px;
-        padding: 15px;
-        margin-bottom: 10px;
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
     }
     .title-panel { 
         padding: 0 0 10px 0;
