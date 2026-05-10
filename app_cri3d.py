@@ -423,7 +423,7 @@ with col_map:
         if os.path.exists(img_path):
             img_base64 = get_base64(img_path)
             bg_style = f"background-image: url('data:image/png;base64,{img_base64}');"
-            title_text = "Simulación de<br>Entorno Animal"
+            title_text = "Visualización del<br>Entorno de la Vaca"
             subtitle_text = f"Visualización predictiva para el estado de <b>{st.session_state.selected_state}</b>"
         else:
             # Fallback elegante si no se encuentran las imágenes (común en despliegue cloud sin assets)
