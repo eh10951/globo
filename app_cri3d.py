@@ -350,10 +350,10 @@ with col_side:
     w_icon = weather_icons.get(weather, "🌡️")
 
     # Lógica de Color, Estado, Protocolos e Imágenes (Inteligencia Unificada)
-    if ith >= 89:
+    if ith >= 89 or weather == "Calor Extremo":
         color = "#ff4b4b" # Rojo Emergencia
-        status = "EMERGENCIA"
-        protocol = "🆘 <b style='color:#ff4b4b'>CRÍTICO - ITH EXTREMO</b>: Riesgo inminente de muerte por golpe de calor. Activar aspersores continuos, ventilación máxima y agua helada."
+        status = "EMERGENCIA" if ith >= 89 else "PELIGRO TÉRMICO"
+        protocol = "🆘 <b style='color:#ff4b4b'>CRÍTICO - CALOR EXTREMO</b>: Riesgo inminente de muerte por golpe de calor. Activar aspersores continuos, ventilación máxima y agua helada."
         scenario_img = "cow_heat_emergency.png"
         scenario_label = "EMERGENCIA: CALOR EXTREMO"
     elif ith >= 79:
@@ -464,9 +464,6 @@ with col_map:
                     <h1 style="margin:0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1;">
                         {title_text}
                     </h1>
-                    <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.8); font-size: 1.1rem; font-weight: 400;">
-                        {subtitle_text}
-                    </p>
                 </div>
             </div>
         """, unsafe_allow_html=True)
