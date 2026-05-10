@@ -280,7 +280,7 @@ if 'selected_country' not in st.session_state: st.session_state.selected_country
 col_map, col_side, col_spacer = st.columns([3.5, 1.5, 0.3], gap="large", vertical_alignment="center")
 
 with col_side:
-    st.markdown("<div class='title-panel'><p style='margin:0; font-size:1.1rem; color:#E8B547; letter-spacing: 3px; font-weight: 700; text-transform: uppercase;'>VISIÓN INTELIGENTE</p></div>", unsafe_allow_html=True)
+    # Gestión de estado de simulación
     
     # Gestión de estado de simulación
     data = df[df['name'] == st.session_state.selected_state].iloc[0]
