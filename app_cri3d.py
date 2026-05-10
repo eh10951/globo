@@ -21,25 +21,8 @@ st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
     .main, .stApp { 
-        background: 
-            radial-gradient(1px 1px at 5% 5%, #fff, transparent),
-            radial-gradient(1.5px 1.5px at 15% 25%, #3498DB, transparent),
-            radial-gradient(0.8px 0.8px at 25% 10%, #fff, transparent),
-            radial-gradient(1.2px 1.2px at 35% 45%, #E8B547, transparent),
-            radial-gradient(1px 1px at 45% 85%, #fff, transparent),
-            radial-gradient(2px 2px at 55% 15%, #3498DB, transparent),
-            radial-gradient(1px 1px at 65% 65%, #fff, transparent),
-            radial-gradient(1.5px 1.5px at 75% 35%, #E8B547, transparent),
-            radial-gradient(0.5px 0.5px at 85% 75%, #fff, transparent),
-            radial-gradient(1px 1px at 95% 20%, #3498DB, transparent),
-            radial-gradient(1.2px 1.2px at 10% 80%, #fff, transparent),
-            radial-gradient(1px 1px at 30% 90%, #E8B547, transparent),
-            radial-gradient(1.5px 1.5px at 50% 50%, #fff, transparent),
-            radial-gradient(0.8px 0.8px at 70% 10%, #3498DB, transparent),
-            radial-gradient(1px 1px at 90% 40%, #fff, transparent),
-            radial-gradient(circle at 30% 30%, rgba(52, 152, 219, 0.12) 0%, transparent 50%),
-            radial-gradient(circle at 70% 70%, rgba(52, 152, 219, 0.1) 0%, transparent 60%),
-            radial-gradient(ellipse at 50% 50%, rgba(20, 30, 48, 0.6) 0%, #05070a 100%) !important;
+        background-color: #05070a !important;
+        background-image: radial-gradient(circle at 50% 50%, #111827 0%, #05070a 100%) !important;
         background-attachment: fixed !important;
         color: #f8fafc; 
         font-family: 'Outfit', sans-serif; 
