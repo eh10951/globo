@@ -122,19 +122,24 @@ st.markdown("""
         display: none !important;
     }
     .block-container { 
-        padding: 0 !important; 
-        max-width: 95% !important;
-        height: 100vh !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+        max-width: 98% !important;
     }
-    #root > div:nth-child(1) > div > div > div > div > section > div {
-        padding-top: 0rem !important;
+    [data-testid="stAppViewContainer"] {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100%;
+        height: 100vh !important;
+        overflow: hidden !important;
+    }
+    [data-testid="stVerticalBlock"] {
+        gap: 0 !important;
+    }
+    .stHorizontalBlock {
+        align-items: center !important;
     }
     /* Ocultar scrollbar para vista limpia */
     .stApp { overflow: hidden !important; height: 100vh !important; }
