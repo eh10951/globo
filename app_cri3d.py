@@ -122,24 +122,25 @@ st.markdown("""
         display: none !important;
     }
     .block-container { 
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        padding-left: 2rem !important;
-        padding-right: 2rem !important;
-        max-width: 98% !important;
+        padding-top: 5vh !important;
+        padding-bottom: 5vh !important;
+        padding-left: 3rem !important;
+        padding-right: 3rem !important;
+        max-width: 95% !important;
     }
     [data-testid="stAppViewContainer"] {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100vh !important;
-        overflow: hidden !important;
+        min-height: 100vh !important;
+        overflow: auto !important;
     }
     [data-testid="stVerticalBlock"] {
-        gap: 0 !important;
+        gap: 2rem !important;
     }
     .stHorizontalBlock {
         align-items: center !important;
+        gap: 3rem !important;
     }
     /* Ocultar scrollbar para vista limpia */
     .stApp { overflow: hidden !important; height: 100vh !important; }
