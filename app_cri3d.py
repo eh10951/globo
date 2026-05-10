@@ -267,12 +267,6 @@ with col_side:
     # SIMULADOR DE ESCENARIOS PREVENTIVOS (WHAT-IF)
     st.markdown("<p style='font-size:0.85rem; color:#E8B547; margin:10px 0 5px 0; text-transform: uppercase; letter-spacing:1px; font-weight:700;'>Simulador de Escenarios (What-If)</p>", unsafe_allow_html=True)
     
-    # El botón debe ir ANTES de los sliders para poder actualizar su estado sin errores
-    if st.button("🔄 Restablecer a Tiempo Real", use_container_width=True):
-        st.session_state.temp_slider = float(data['temp'])
-        st.session_state.hum_slider = float(data['hum'])
-        st.rerun()
-
     sim_temp = st.slider("Temperatura (°C)", 10.0, 50.0, key="temp_slider", step=0.5)
     sim_hum = st.slider("Humedad (%)", 5.0, 100.0, key="hum_slider", step=1.0)
 
@@ -359,25 +353,15 @@ with col_side:
 <p style="font-size:1.1rem; font-weight:700; margin:0; color: #E8B547;">{data['name']}</p>
 <div style="display: flex; justify-content: center; align-items: baseline; gap: 10px; margin-top: 5px;">
     <div style="text-align: center;">
-        <p style="font-size:2.8rem; font-weight:800; color:#fff; margin:0; line-height: 1;">{ith:.1f}</p>
-        <p style="font-size:0.55rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 1px;">ÍNDICE ITH</p>
-    </div>
-    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.1); align-self: center;"></div>
-    <div style="text-align: center;">
-        <p style="font-size:1.8rem; font-weight:700; color:{color}; margin:0; line-height: 1;">{cri_risk:.0f}%</p>
-        <p style="font-size:0.55rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 1px;">RIESGO CRI</p>
+        <p style="font-size:3.5rem; font-weight:800; color:{color}; margin:0; line-height: 1;">{cri_risk:.0f}%</p>
+        <p style="font-size:0.6rem; color:#94a3b8; margin:0; text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">RIESGO CRI</p>
     </div>
 </div>
 </div>
-<div style="display: flex; justify-content: space-around; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
+<div style="display: flex; justify-content: center; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
     <div style="text-align: center;">
-        <p style="margin:0; font-size:0.7rem; color:#94a3b8; text-transform:uppercase; letter-spacing: 0.5px;">Real (Actual)</p>
-        <p style="margin:0; font-size:1.1rem; font-weight:700; color:#3498DB;">{data['temp']:.1f}°C / {data['hum']:.1f}%</p>
-    </div>
-    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.05); align-self: center;"></div>
-    <div style="text-align: center;">
-        <p style="margin:0; font-size:0.7rem; color:#94a3b8; text-transform:uppercase; letter-spacing: 0.5px;">Simulado</p>
-        <p style="margin:0; font-size:1.1rem; font-weight:700; color:#E8B547;">{sim_temp:.1f}°C / {sim_hum:.1f}%</p>
+        <p style="margin:0; font-size:0.75rem; color:#94a3b8; text-transform:uppercase; letter-spacing: 1px;">DATOS SIMULADOS</p>
+        <p style="margin:0; font-size:1.4rem; font-weight:700; color:#E8B547;">{sim_temp:.1f}°C / {sim_hum:.1f}%</p>
     </div>
 </div>
 </div>
